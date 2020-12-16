@@ -1,6 +1,10 @@
 package com.maciejp.postsapp.user;
 
+import com.maciejp.postsapp.expection.UserRegisterException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,8 +17,19 @@ public class UserService {
         this.userDataAccessObject = userDataAccessObject;
     }
 
-    public void addUser(User user) {
+    public void addUser(User user) throws UserRegisterException {
+        if (userDataAccessObject.selectUserByName(user.getName()) != null) {
+            throw new UserRegisterException("name already in use");
+        }
+
+        if (userDataAccessObject.selectUserByEmail(user.getEmail()) != null) {
+            throw new UserRegisterException("email already in use");
+        }
         userDataAccessObject.addUser(user);
+    }
+
+    public void addUserAsString(String user) throws UserRegisterException {
+        addUser(parseUserJSON(user));
     }
 
     public User getUserByName(String name) {
@@ -23,6 +38,22 @@ public class UserService {
 
     public void deleteUserByName(String name) {
         userDataAccessObject.deleteUserByName(name);
+    }
+
+    private User parseUserJSON(String userJSON) {
+        try {
+            JSONObject userJSONObject = new JSONObject(userJSON);
+            User user = new User(0, userJSONObject.getString("email"),
+                    encodePassword(userJSONObject.getString("password")),
+                    userJSONObject.getString("name"));
+            return user;
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    private String encodePassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
 }

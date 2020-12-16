@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>postsapp</title>
     <script type="text/javascript" th:src="@{/js/app.js}"></script>
     <link th:href="@{/css/main.css}" rel="stylesheet" />
 </head>
@@ -10,6 +10,10 @@
 
     <h1>postsapp</h1>
 
+    <div>
+        <h4><a th:href="@{/register}">register</a></h4>
+        <h4><a th:href="@{/login}">login</a></h4>
+    </div>
     <button onclick="sendGetRequest()">send</button>
 
     <div id="posts_container">

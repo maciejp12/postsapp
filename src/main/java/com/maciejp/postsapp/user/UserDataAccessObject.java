@@ -47,6 +47,34 @@ public class UserDataAccessObject {
         }
     }
 
+    public User selectUserByEmail(String email) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            User result = null;
+
+            String sql = "SELECT user_id, email, password, name FROM users WHERE email = ? ";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, email);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                result = new User(resultSet.getLong(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4));
+            }
+
+            return result;
+        } catch (ClassNotFoundException | SQLException e) {
+            return null;
+        } finally {
+            close();
+        }
+    }
+
     public void addUser(User user) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

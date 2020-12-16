@@ -1,5 +1,6 @@
 package com.maciejp.postsapp.user;
 
+import com.maciejp.postsapp.expection.UserRegisterException;
 import com.maciejp.postsapp.user.UserService;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -7,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class UserServiceTest {
 
@@ -35,7 +37,11 @@ public class UserServiceTest {
         savedUser.setEmail(email);
         savedUser.setPassword(password);
 
-        userService.addUser(savedUser);
+        try {
+            userService.addUser(savedUser);
+        } catch (UserRegisterException e) {
+            fail();
+        }
 
         User existingPost = userService.getUserByName(testName);
 

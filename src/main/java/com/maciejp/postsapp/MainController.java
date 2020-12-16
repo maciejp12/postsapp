@@ -20,4 +20,19 @@ public class MainController {
         return "newpost";
     }
 
+    @GetMapping("/register")
+    public String register() {
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/register_success")
+    public String registerSuccess() {
+        return "register_success";
+    }
+
 }

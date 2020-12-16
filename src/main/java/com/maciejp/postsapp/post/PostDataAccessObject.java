@@ -27,7 +27,8 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             List<Post> result = new ArrayList<>();
 
-            String sql = "SELECT post_id, title, author, content, creation_date FROM posts";
+            String sql = "SELECT post_id, title, author, content, creation_date FROM posts ORDER BY " +
+                    "creation_date DESC";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
