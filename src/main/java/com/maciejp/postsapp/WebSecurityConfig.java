@@ -18,8 +18,6 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
-
     @Bean
     public UserDetailsService userDetailsService() {
         return new CustomUserDetailsService();
@@ -51,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/newpost").authenticated()
                     .anyRequest().permitAll()
                     .and()
-                .formLogin()
+                .formLogin().loginPage("/login")
                     .usernameParameter("name")
                     .defaultSuccessUrl("/").permitAll()
                     .and()
