@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/js/newpostapp.js}"></script>
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+</head>
+<body>
+
+    <div>
+        <form id="postform">
+            <div>
+                <label>title</label>
+                <input type="text" name="title" id="title" />
+            </div>
+            <div>
+                <label>author</label>
+                <input type="text" name="author" id="author" />
+            </div>
+            <div>
+                <label>content</label>
+                <input type="text" name="content" id="content" />
+            </div>
+
+            <p>
+                <input value="Submit" type="button" onclick="submitform()" />
+                <input type="reset" value="Reset" />
+            </p>
+        </form>
+    </div>
+
+</body>
+</html>
