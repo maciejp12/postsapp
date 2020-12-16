@@ -1,5 +1,7 @@
 package com.maciejp.postsapp.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class User {
 
     private long id;
@@ -10,11 +12,18 @@ public class User {
 
     private String name;
 
-    public User(long id, String email, String password, String name) {
+    public User(@JsonProperty("user_id") long id,
+                @JsonProperty("email")String email,
+                @JsonProperty("password")String password,
+                @JsonProperty("name")String name) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
+    }
+
+    public User() {
+
     }
 
     public long getId() {

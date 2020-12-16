@@ -1,11 +1,7 @@
 package com.maciejp.postsapp.post;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class PostServiceTest {
 
@@ -38,6 +34,8 @@ public class PostServiceTest {
 
         Post existingPost = postService.getPostByTitle(title);
 
-        assertThat(existingPost.getAuthor()).isEqualTo(author);
+        Assert.assertEquals(existingPost.getTitle(), title);
+        Assert.assertEquals(existingPost.getAuthor(), author);
+        Assert.assertEquals(existingPost.getContent(), content);
     }
 }
