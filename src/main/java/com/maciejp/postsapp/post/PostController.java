@@ -23,9 +23,8 @@ public class PostController {
     }
 
     @PostMapping
-    public String addPost(@RequestBody String post) {
-        postService.addPost(post);
-        return "addPostcalled";
+    public void addPost(@RequestBody String post) {
+        postService.addPostAsString(post);
     }
 
 }

@@ -16,6 +16,10 @@ public class Post {
 
     private Timestamp creationDate;
 
+    public Post() {
+
+    }
+
     public Post(@JsonProperty("postId") long postId,
                 @JsonProperty("title") String title,
                 @JsonProperty("author") String author,
@@ -46,6 +50,26 @@ public class Post {
 
     public Timestamp getCreationDate() {
         return creationDate;
+    }
+
+    public void setPostId(long postId) {
+        this.postId = postId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override

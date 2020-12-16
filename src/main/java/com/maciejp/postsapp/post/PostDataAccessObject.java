@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class PostDataAccessService {
+public class PostDataAccessObject {
 
     private static final String dbUserName = "posts_user";
     private static final String dbUserPassword = "postspasswd";
@@ -19,7 +19,7 @@ public class PostDataAccessService {
     private PreparedStatement statement = null;
 
     @Autowired
-    public PostDataAccessService() {
+    public PostDataAccessObject() {
     }
 
     public List<Post> selectAllPosts() {
@@ -50,13 +50,41 @@ public class PostDataAccessService {
         }
     }
 
+    public Post selectPostByTitle(String title) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Post result = null;
+
+            String sql = "SELECT post_id, title, author, content, creation_date FROM posts WHERE title = ? ";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, title);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                result = new Post(resultSet.getLong(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5));
+            }
+
+            return result;
+        } catch (ClassNotFoundException | SQLException e) {
+            return null;
+        } finally {
+            close();
+        }
+    }
+
     public void addPost(Post post) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            List<Post> result = new ArrayList<>();
 
-            String sql = "insert into posts(title, author, content, creation_date) " +
-                    "values( ? ,  ? ,  ? , now())";
+            String sql = "INSERT INTO posts(title, author, content, creation_date) " +
+                    "VALUES( ? ,  ? ,  ? , now())";
 
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
@@ -68,6 +96,23 @@ public class PostDataAccessService {
 
             statement.executeUpdate();
 
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
+    public void deletePostByTitle(String title) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String sql = "DELETE FROM posts WHERE title = ? ";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, title);
+            statement.executeUpdate();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         } finally {
