@@ -18,6 +18,7 @@ public class UserService {
     }
 
     public void addUser(User user) throws UserRegisterException {
+        user.setPassword(encodePassword(user.getPassword()));
         if (userDataAccessObject.selectUserByName(user.getName()) != null) {
             throw new UserRegisterException("name already in use");
         }
@@ -28,12 +29,21 @@ public class UserService {
         userDataAccessObject.addUser(user);
     }
 
-    public void addUserAsString(String user) throws UserRegisterException {
-        addUser(parseUserJSON(user));
+    public void addUserAsString(String userJSON) throws UserRegisterException {
+        User user = parseUserJSON(userJSON);
+        if (user != null) {
+            addUser(user);
+        } else {
+            throw new UserRegisterException("Registration error");
+        }
     }
 
     public User getUserByName(String name) {
         return userDataAccessObject.selectUserByName(name);
+    }
+
+    public User getUserByEmail(String email) {
+        return userDataAccessObject.selectUserByEmail(email);
     }
 
     public void deleteUserByName(String name) {
@@ -43,10 +53,9 @@ public class UserService {
     private User parseUserJSON(String userJSON) {
         try {
             JSONObject userJSONObject = new JSONObject(userJSON);
-            User user = new User(0, userJSONObject.getString("email"),
-                    encodePassword(userJSONObject.getString("password")),
+            return new User(0, userJSONObject.getString("email"),
+                    userJSONObject.getString("password"),
                     userJSONObject.getString("name"));
-            return user;
         } catch (JSONException e) {
             return null;
         }
