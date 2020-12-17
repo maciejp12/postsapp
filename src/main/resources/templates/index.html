@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/schema/security">
 <head>
     <meta charset="UTF-8">
     <title>postsapp</title>
@@ -10,9 +10,30 @@
 
     <h1>postsapp</h1>
 
+
     <div>
-        <h4><a th:href="@{/register}">register</a></h4>
-        <h4><a th:href="@{/login}">login</a></h4>
+
+            <p>
+                <div sec:authorize="!isFullyAuthenticated()">
+                    <div>
+                        <h4><a th:href="@{/register}">register</a></h4>
+                        <h4><a th:href="@{/login}">login</a></h4>
+                    </div>
+                </div>
+
+                <div sec:authorize="isFullyAuthenticated()">
+                    <form th:action="@{/logout}" method="post">
+                        <p>Welcome <b>[[${#request.userPrincipal.principal.name}]]</b></p>
+                        <input type="submit" value="Sign out"/>
+                    </form>
+
+                </div>
+            </p>
+
+    </div>
+
+    <div sec:authorize="isFullyAuthenticated()">
+        <p>add new post <a th:href="@{/newpost}">here</a></p>
     </div>
     <button onclick="sendGetRequest()">send</button>
 
@@ -21,8 +42,6 @@
             getAllPosts();
         </script>
     </div>
-
-    <p>add new pots <a th:href="@{/newpost}">here</a></p>
 
 </body>
 </html>

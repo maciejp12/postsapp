@@ -2,6 +2,8 @@ package com.maciejp.postsapp.post;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +26,12 @@ public class PostController {
 
     @PostMapping
     public void addPost(@RequestBody String post) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            System.out.println(authentication.getName());
+        } else {
+            System.out.println("user is null");
+        }
         postService.addPostAsString(post);
     }
 
