@@ -6,6 +6,7 @@ import com.maciejp.postsapp.user.User;
 import com.maciejp.postsapp.user.UserDataAccessObject;
 import com.maciejp.postsapp.user.UserService;
 import org.junit.*;
+import org.springframework.test.context.TestExecutionListeners;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -18,6 +19,7 @@ public class PostServiceTest {
     private static String testTitle = "test_title";
 
     private static String testAuthorName = "test_add_post_user";
+    private static String testNonExistingAuthorName = "test_non_existing_author_user";
 
     @BeforeClass
     public static void setup() {
@@ -35,6 +37,9 @@ public class PostServiceTest {
         } catch (UserRegisterException e) {
             fail("cannot create test user");
         }
+
+        // confirm that user with this name doesn't exist
+        userService.deleteUserByName(testNonExistingAuthorName);
     }
 
     @AfterClass
@@ -68,5 +73,27 @@ public class PostServiceTest {
         Assert.assertEquals(existingPost.getTitle(), title);
         Assert.assertEquals(existingPost.getAuthor(), expectedUserName);
         Assert.assertEquals(existingPost.getContent(), content);
+    }
+
+    @Test
+    public void testAddPostWithNonExistingUser() {
+        Post savedPost = new Post();
+
+        String title = "test_title_2";
+        String author = testNonExistingAuthorName;
+        String content = "test_content_2";
+
+        savedPost.setTitle(title);
+        savedPost.setAuthor(author);
+        savedPost.setContent(content);
+        
+        String expectedMessage = "Please log in to create new post";
+
+        try {
+            postService.addPost(savedPost);
+            fail("method didn't throw exception");
+        } catch (PostCreationException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
     }
 }
