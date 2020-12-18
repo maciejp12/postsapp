@@ -32,7 +32,8 @@ public class PostDataAccessObject {
                     "JOIN users ON posts.author = users.user_id ORDER BY " +
                     "creation_date DESC";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
 
             ResultSet resultSet = statement.executeQuery();
@@ -61,7 +62,8 @@ public class PostDataAccessObject {
             String sql = "SELECT post_id, title, name, content, creation_date FROM posts " +
                     "JOIN users ON posts.author = users.user_id WHERE title = ? ";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
             statement.setString(1, title);
 
@@ -87,7 +89,8 @@ public class PostDataAccessObject {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
 
             long authorId = 0;
 
@@ -131,7 +134,8 @@ public class PostDataAccessObject {
 
             String sql = "DELETE FROM posts WHERE title = ? ";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
             statement.setString(1, title);
             statement.executeUpdate();

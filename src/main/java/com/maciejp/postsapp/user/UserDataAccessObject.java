@@ -26,7 +26,8 @@ public class UserDataAccessObject {
 
             String sql = "SELECT user_id, email, password, name FROM users WHERE name = ? ";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
             statement.setString(1, name);
 
@@ -54,7 +55,8 @@ public class UserDataAccessObject {
 
             String sql = "SELECT user_id, email, password, name FROM users WHERE email = ? ";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
             statement.setString(1, email);
 
@@ -83,7 +85,8 @@ public class UserDataAccessObject {
                     "VALUES( ? ,  ? ,  ? )";
 
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
 
             statement.setString(1, user.getEmail());
@@ -105,7 +108,8 @@ public class UserDataAccessObject {
 
             String sql = "DELETE FROM users WHERE name = ? ";
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
             statement.setString(1, name);
             statement.executeUpdate();
