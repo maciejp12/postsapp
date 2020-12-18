@@ -5,11 +5,9 @@ var getInput = () => {
     //TODO validate data
 
     let title = document.getElementById('title').value;
-    let author = document.getElementById('author').value;
     let content = document.getElementById('content').value;
     
     return {'title' : title,
-            'author' : author,
             'content' : content};
 }
 

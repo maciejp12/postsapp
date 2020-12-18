@@ -1,5 +1,8 @@
 package com.maciejp.postsapp.post;
 
+import com.maciejp.postsapp.expection.PostCreationException;
+import com.maciejp.postsapp.user.User;
+import com.maciejp.postsapp.user.UserService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +32,23 @@ public class PostService {
         postDataAccessObject.deletePostByTitle(title);
     }
 
-    public void addPostAsString(String post) {
-        addPost(parsePostJSON(post));
+    public void addPostAsString(String post, String userName) throws PostCreationException {
+        //User author = userService.getUserByName(userName);
+        //if (author == null) {
+        //    throw new PostCreationException("please log in");
+        //}
+        addPost(parsePostJSON(post, userName));
     }
 
-    public void addPost(Post post) {
+    public void addPost(Post post) throws PostCreationException {
         postDataAccessObject.addPost(post);
     }
 
-    private Post parsePostJSON(String postJSON) {
+    private Post parsePostJSON(String postJSON, String author) {
         try {
             JSONObject postJSONObject = new JSONObject(postJSON);
             Post post = new Post(0, postJSONObject.getString("title"),
-                                    postJSONObject.getString("author"),
+                                    author,
                                     postJSONObject.getString("content"),
                                     null);
             return post;

@@ -1,5 +1,6 @@
 package com.maciejp.postsapp.post;
 
+import com.maciejp.postsapp.expection.PostCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +28,8 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             List<Post> result = new ArrayList<>();
 
-            String sql = "SELECT post_id, title, author, content, creation_date FROM posts ORDER BY " +
+            String sql = "SELECT post_id, title, author, content, creation_date FROM posts " +
+                    "JOIN users ON posts.author = users.user_id ORDER BY " +
                     "creation_date DESC";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
@@ -56,7 +58,8 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Post result = null;
 
-            String sql = "SELECT post_id, title, author, content, creation_date FROM posts WHERE title = ? ";
+            String sql = "SELECT post_id, title, name, content, creation_date FROM posts " +
+                    "JOIN users ON posts.author = users.user_id WHERE title = ? ";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
@@ -80,19 +83,37 @@ public class PostDataAccessObject {
         }
     }
 
-    public void addPost(Post post) {
+    public void addPost(Post post) throws PostCreationException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
+
+            long authorId = 0;
+
+            String selectAuthorSql = "SELECT user_id FROM users WHERE name = ? ";
+
+            statement = connection.prepareStatement(selectAuthorSql);
+            statement.setString(1, post.getAuthor());
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                throw new PostCreationException("Please log in to create new post");
+            }
+
+            while (resultSet.next()) {
+                authorId = resultSet.getLong(1);
+            }
 
             String sql = "INSERT INTO posts(title, author, content, creation_date) " +
                     "VALUES( ? ,  ? ,  ? , now())";
 
 
-            connection = DriverManager.getConnection(host + dbName + "?useSSL=false", dbUserName, dbUserPassword);
             statement = connection.prepareStatement(sql);
 
             statement.setString(1, post.getTitle());
-            statement.setString(2, post.getAuthor());
+            statement.setLong(2, authorId);
             statement.setString(3, post.getContent());
 
             statement.executeUpdate();

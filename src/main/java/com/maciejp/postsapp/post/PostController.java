@@ -1,6 +1,7 @@
 package com.maciejp.postsapp.post;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.maciejp.postsapp.expection.PostCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,14 +26,20 @@ public class PostController {
     }
 
     @PostMapping
-    public void addPost(@RequestBody String post) {
+    public String addPost(@RequestBody String post) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            System.out.println(authentication.getName());
+            String userName = authentication.getName();
+            try {
+                postService.addPostAsString(post, userName);
+                return "\"valid\" : true";
+            } catch (PostCreationException e) {
+                return "\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"";
+            }
         } else {
             System.out.println("user is null");
+            return "\"valid\" : false, \"message\" : \"please log in\"";
         }
-        postService.addPostAsString(post);
     }
 
 }
