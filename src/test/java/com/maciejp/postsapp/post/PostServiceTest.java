@@ -64,7 +64,7 @@ public class PostServiceTest {
         String expectedUserName = userService.getUserByName(testAuthorName).getName();
 
         Post existingPost = postService.getPostByTitle(title);
-        System.out.println("posta=" + existingPost.getAuthor());
+
         Assert.assertEquals(existingPost.getTitle(), title);
         Assert.assertEquals(existingPost.getAuthor(), expectedUserName);
         Assert.assertEquals(existingPost.getContent(), content);

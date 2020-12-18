@@ -8,34 +8,30 @@
 </head>
 <body>
 
-    <h1>postsapp</h1>
+    <header>
+        <div class="head-title-section">
+            <h1 class="head-title" ><a class="head-anchor" th:href="@{/}">PostsApp</a></h1>
+        </div>
+        <div class="head-section">
+            
+            <div class="head-login-section" sec:authorize="!isFullyAuthenticated()">
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/login}">login</a></h4>
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/register}">sign up</a></h4>
+                <h4 class="head-login-section-element "><a class="head-anchor" th:href="@{/}">Home</a></h4>
+            </div>
 
-
-    <div>
-
-            <p>
-                <div sec:authorize="!isFullyAuthenticated()">
-                    <div>
-                        <h4><a th:href="@{/register}">register</a></h4>
-                        <h4><a th:href="@{/login}">login</a></h4>
-                    </div>
-                </div>
-
-                <div sec:authorize="isFullyAuthenticated()">
-                    <form th:action="@{/logout}" method="post">
-                        <p>Welcome <b>[[${#request.userPrincipal.principal.name}]]</b></p>
-                        <input type="submit" value="Sign out"/>
-                    </form>
-
-                </div>
-            </p>
-
-    </div>
+            <div class="head-login-section" sec:authorize="isFullyAuthenticated()">
+                <h4 class="head-login-section-element "><a class="head-anchor" th:href="@{/logout}">Sign out</a></h4>
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/}">Home</a></h4>
+                <h4 class="head-login-section-element ">Welcome <b class="head-username">[[${#request.userPrincipal.principal.name}]]</b></h4>
+                
+            </div>
+        </div>
+    </header>
 
     <div sec:authorize="isFullyAuthenticated()">
         <p>add new post <a th:href="@{/newpost}">here</a></p>
     </div>
-    <button onclick="sendGetRequest()">send</button>
 
     <div id="posts_container">
         <script type="text/javascript">

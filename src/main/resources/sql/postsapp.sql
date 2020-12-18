@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `postsapp` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `postsapp`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Linux (x86_64)
 --
 -- Host: 127.0.0.1    Database: postsapp
@@ -25,11 +27,13 @@ DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
-  `author` varchar(64) NOT NULL,
+  `author` int NOT NULL,
   `content` varchar(256) NOT NULL,
   `creation_date` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`post_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`post_id`),
+  KEY `fk_author_idx` (`author`),
+  CONSTRAINT `fk_author` FOREIGN KEY (`author`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +42,7 @@ CREATE TABLE `posts` (
 
 LOCK TABLES `posts` WRITE;
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` VALUES (43,'34','23','5454','2020-12-16 11:34:49'),(54,'w','f','t','2020-12-16 14:52:20');
+INSERT INTO `posts` VALUES (4,'rewr',5,'ffew','2020-12-18 12:28:19'),(64,'wrf',10,'123f','2020-12-18 12:32:00'),(65,'my title',10,'my content','2020-12-18 12:33:41');
 /*!40000 ALTER TABLE `posts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -55,7 +59,7 @@ CREATE TABLE `users` (
   `password` varchar(64) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,6 +68,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (5,'123@wp.ed','$2a$10$8m7v/9z47IPatCwbxvT8FOLJ7d0cEUmMqlDCgNkmtdIJju/PB8BW.','test'),(6,'123@wp.23e','2d2d3','testd'),(7,'123@wp.ed4','UJrfEvjThc3BiWF','34t34rt'),(8,'testuser3@wp.qx','$2a$10$/WxKKx2w4QpXV5IT04Usr.FvcPy0hiZJYnIFR45LMh2bRNgXAPccK','testuser3'),(9,'dqwd23d@f32.23d','$2a$10$xqlq6vkFsSH1lBPIcCDMreovJW29h6FMn.thQuztdPotflM9Q/66.','23d23d'),(10,'qwe@ert.ty','$2a$10$RjHlB3D5BGJJwfVCLEzK2uw/RbnAbQkuTc5ZuTI7QKO8i7wEIufim','ppp'),(11,'123@456.7','$2a$10$//35kBKrWcnCUJH4iLylpOEmJEiU9bElUr/hMV56WoORsTnqwyswy','hey');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -76,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-16 14:53:30
+-- Dump completed on 2020-12-18 14:03:00
