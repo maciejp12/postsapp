@@ -40,7 +40,13 @@
         </div>
         <div>
             <label>Passsword</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" onkeyup="checkPassword();" required>
+        </div>
+
+        <div>
+            <label>Confirm Passsword</label>
+            <input type="password" id="confirm_password" name="confirm_password" onkeyup="checkPassword();" required>
+            <span id="password_message"></span>
         </div>
 
         <input value="Sign up" type="button" onclick="submitRegisterForm();" />
