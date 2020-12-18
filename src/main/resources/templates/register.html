@@ -5,6 +5,8 @@
     <title>sign up</title>
     <script type="text/javascript" th:src="@{/js/registerapp.js}"></script>
     <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/register.css}" rel="stylesheet" />
+    
 </head>
 <body>
 
@@ -28,29 +30,48 @@
             </div>
         </div>
     </header>
+    
+    <div class="form-container">
+        <form id="registerform">
+            
+            <div class="form-element">
+                <h2 class="form-header">Sign up now</h2>
+            </div>
 
-    <form id="registerform">
-        <div>
-            <label>E-mail</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label>Name</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div>
-            <label>Passsword</label>
-            <input type="password" id="password" name="password" onkeyup="checkPassword();" required>
-        </div>
+            <div class="form-element">
+                <label class="form-label">E-mail</label>
+                <input class="form-input" type="email" id="email" name="email" required>
+            </div>
 
-        <div>
-            <label>Confirm Passsword</label>
-            <input type="password" id="confirm_password" name="confirm_password" onkeyup="checkPassword();" required>
-            <span id="password_message"></span>
-        </div>
+            <div class="form-element">
+                <label class="form-label">Name</label>
+                <input class="form-input" type="text" id="name" name="name" required>
+            </div>
 
-        <input value="Sign up" type="button" onclick="submitRegisterForm();" />
-        <p id="errormessage"></p>
-    </form>
+            <div class="form-element">
+                <label class="form-label">Passsword</label>
+                <input class="form-input" type="password" id="password" name="password" onkeyup="checkPassword();" required>
+            </div>
+
+            <div class="form-element">
+                <label class="form-label">Confirm Passsword</label>
+                <input class="form-input" type="password" id="confirm_password" name="confirm_password" onkeyup="checkPassword();" required>
+            </div>
+            
+            <div class="form-element">
+                <span class="form-message" id="password_message"></span>
+            </div>
+
+            <div class="form-element">
+                <p class="form-message" id="errormessage"></p>
+            </div>
+
+            <div class="form-element">
+                <input class="form-but" value="Sign up" type="button" onclick="submitRegisterForm();" />
+            </div>
+            
+        </form>
+    </div>
+
 </body>
 </html>

@@ -26,19 +26,27 @@ const getAllPosts = () => {
     }
 }
 
+const postBgColors = ['#e0e9ff', '#c9d9ff'];
+
 const createPostsList = (postsArray) => {
     let postsList = document.createElement('div');
     postsList.classList.add('post-list');
 
+    // diffrent color for even and odd posts in order
+    let i = 0;
+
     for (const post in postsArray) {
         let postHTML = createNewPost(postsArray[post]);
         postsList.appendChild(postHTML);
+        postHTML.style.backgroundColor = postBgColors[i % postBgColors.length]
+        i++;
     }
 
 
     let container = document.getElementById('posts_container');
     container.appendChild(postsList);
 }
+
 
 const createNewPost = (postJSON) => {
     var post = document.createElement('div');

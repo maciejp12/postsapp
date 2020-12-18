@@ -86,7 +86,7 @@ public class PostServiceTest {
         savedPost.setTitle(title);
         savedPost.setAuthor(author);
         savedPost.setContent(content);
-        
+
         String expectedMessage = "Please log in to create new post";
 
         try {
