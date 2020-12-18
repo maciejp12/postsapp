@@ -8,6 +8,27 @@
 </head>
 <body>
 
+    <header>
+        <div class="head-title-section">
+            <h1 class="head-title" ><a class="head-anchor" th:href="@{/}">PostsApp</a></h1>
+        </div>
+        <div class="head-section">
+            
+            <div class="head-login-section" sec:authorize="!isFullyAuthenticated()">
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/login}">Login</a></h4>
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/register}">Sign up</a></h4>
+                <h4 class="head-login-section-element "><a class="head-anchor" th:href="@{/}">Home</a></h4>
+            </div>
+
+            <div class="head-login-section" sec:authorize="isFullyAuthenticated()">
+                <h4 class="head-login-section-element "><a class="head-anchor" th:href="@{/logout}">Sign out</a></h4>
+                <h4 class="head-login-section-element" ><a class="head-anchor" th:href="@{/}">Home</a></h4>
+                <h4 class="head-login-section-element ">Welcome <b class="head-username">[[${#request.userPrincipal.principal.name}]]</b></h4>
+                
+            </div>
+        </div>
+    </header>
+
     <div>
         <form id="postform">
             <div>
