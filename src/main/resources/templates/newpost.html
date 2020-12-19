@@ -5,6 +5,9 @@
     <title>Title</title>
     <script type="text/javascript" th:src="@{/js/newpostapp.js}"></script>
     <link th:href="@{/css/main.css}" rel="stylesheet" />
+    <link th:href="@{/css/formstyle.css}" rel="stylesheet" />
+    <link th:href="@{/css/postform.css}" rel="stylesheet" />
+    
 </head>
 <body>
 
@@ -29,22 +32,26 @@
         </div>
     </header>
 
-    <div>
-        <form id="postform">
-            <div>
-                <label>title</label>
-                <input type="text" name="title" id="title" />
+    <div class="form-container">
+        <form class="post-form" id="postform">
+            <div class="form-element">
+                <label class="post-form-title" >title</label>
+                <input class="post-form-input" type="text" name="title" id="title" />
             </div>
 
-            <div>
-                <label>content</label>
-                <input type="text" name="content" id="content" />
+            <div class="post-form-content-container">
+                <label class="form-label">content</label>
+                <textarea class="post-form-content" type="text" name="content" id="content" ></textarea>
             </div>
 
-            <p>
-                <input value="Submit" type="button" onclick="submitform()" />
-                <input type="reset" value="Reset" />
-            </p>
+            <div class="form-element">
+                <span class="form-message" id="post_error"></span>
+            </div>
+
+            <div class="post-form-but-container">
+                <input class="post-form-but" value="Submit" type="button" onclick="submitform()" />
+                <input class="post-form-but" type="reset" value="Reset" />
+            </div>
         </form>
     </div>
 
