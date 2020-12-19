@@ -168,7 +168,7 @@ public class UserServiceTest {
         user.setPassword("passw");
         user.setEmail("test_email@example.com");
 
-        String expectedMessage = "password must be between 6 and 63 characters long";
+        String expectedMessage = "password must be between 6 and 64 characters long";
 
         try {
             userService.addUser(user);
