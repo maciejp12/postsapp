@@ -96,4 +96,83 @@ public class PostServiceTest {
             Assert.assertEquals(e.getMessage(), expectedMessage);
         }
     }
+
+    @Test
+    public void testAddPostWithTooShortTitle() {
+        Post post = new Post();
+
+        post.setTitle("ab");
+        post.setAuthor(testAuthorName);
+        post.setContent("test_content");
+
+        String expectedMessage = "title must be between 3 and 64 characters long";
+
+        try {
+            postService.addPost(post);
+            fail("method didn't throw exception");
+        } catch (PostCreationException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddPostWithTooLongTitle() {
+        Post post = new Post();
+
+        post.setTitle("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxy");
+        post.setAuthor(testAuthorName);
+        post.setContent("test_content");
+
+        String expectedMessage = "title must be between 3 and 64 characters long";
+
+        try {
+            postService.addPost(post);
+            fail("method didn't throw exception");
+        } catch (PostCreationException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddPostWithTooShortContent() {
+        Post post = new Post();
+
+        post.setTitle("test_title");
+        post.setAuthor(testAuthorName);
+        post.setContent("ab");
+
+        String expectedMessage = "content must be between 3 and 4096 characters long";
+
+        try {
+            postService.addPost(post);
+            fail("method didn't throw exception");
+        } catch (PostCreationException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddPostWithTooLongContent() {
+        Post post = new Post();
+
+        String veryLongContent = "";
+        int maxContentLength = 4096;
+
+        for (int i = 0; i < maxContentLength + 1; i++) {
+            veryLongContent += "x";
+        }
+
+        post.setTitle("test_title");
+        post.setAuthor(testAuthorName);
+        post.setContent(veryLongContent);
+
+        String expectedMessage = "content must be between 3 and 4096 characters long";
+
+        try {
+            postService.addPost(post);
+            fail("method didn't throw exception");
+        } catch (PostCreationException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
 }
