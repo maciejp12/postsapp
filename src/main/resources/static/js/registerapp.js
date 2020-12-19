@@ -31,6 +31,53 @@ var checkPassword = () => {
     }
 }
 
+// input validation
+
+const minNameLen = 3;
+const maxNameLen = 64;
+
+const minPasswordLen = 6;
+const maxPasswordLen = 64;
+
+var validateInput = (input) => {
+    var errormessage = document.getElementById('errormessage');
+
+    if (!validateName(input.name)) {
+        errormessage.innerHTML = 'name must be between 3 and 63 characters long';
+        return false;
+    }
+
+    if (!validatePassword(input.password)) {
+        errormessage.innerHTML = 'password must be between 6 and 64 characters long';
+        return false;
+    }
+
+    if (!validateEmail(input.email)) {
+        errormessage.innerHTML = 'email is not valid';
+        return false;
+    }
+
+    return true;
+}
+
+
+
+var validateName = (name) => {
+    let len = name.length
+    return len >= minNameLen && len <= maxNameLen;
+}
+
+var validatePassword = (password) => {
+    let len = password.length
+    return len >= minPasswordLen && len <= maxPasswordLen;
+}
+
+var validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email.toLowerCase());
+}
+
+
 var submitRegisterForm = () => {
     var xhr = new XMLHttpRequest();
     var json = getRegisterInput();
@@ -42,6 +89,10 @@ var submitRegisterForm = () => {
         return;
     }
 
+    if(!validateInput(json)) {
+        return;
+    }
+
     xhr.open('POST', url, true);
     xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     xhr.onreadystatechange = () => {
@@ -50,7 +101,7 @@ var submitRegisterForm = () => {
             if (json.valid) {
                 window.location.href = '/register_success';
             } else {
-                var errormessage = document.getElementById("errormessage");
+                var errormessage = document.getElementById('errormessage');
                 errormessage.innerHTML = json.message;
             }     
         }
