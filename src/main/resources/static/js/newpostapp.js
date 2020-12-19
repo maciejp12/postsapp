@@ -43,18 +43,27 @@ var validateInput = (input) => {
 }
 
 var submitform = () => {
-    var xhr = new XMLHttpRequest();
+    var postrequest = new XMLHttpRequest();
     var json = getInput();
 
     if (!validateInput(json)) {
         return;
     }
+
+    postrequest.open('POST', url, true);
+    postrequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.onreadystatechange = () => {
-        window.location.href = '/';
+    postrequest.onreadystatechange = () => {
+        if (postrequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(postrequest.responseText);
+            if (json.valid) {
+                window.location.href = '/';
+            } else {
+                var errormessage = document.getElementById('post_error');
+                errormessage.innerHTML = json.message;
+            }
+        }
     }
 
-    xhr.send(JSON.stringify(json));
+    postrequest.send(JSON.stringify(json));
 }

@@ -33,14 +33,18 @@ public class PostService {
     }
 
     public void addPostAsString(String post, String userName) throws PostCreationException {
-        //User author = userService.getUserByName(userName);
-        //if (author == null) {
-        //    throw new PostCreationException("please log in");
-        //}
         addPost(parsePostJSON(post, userName));
     }
 
     public void addPost(Post post) throws PostCreationException {
+        if (!validateTitle(post.getTitle())) {
+            throw new PostCreationException("title must be between 3 and 64 characters long");
+        }
+
+        if (!validateContent(post.getContent())) {
+            throw new PostCreationException("content must be between 3 and 4096 characters long");
+        }
+
         postDataAccessObject.addPost(post);
     }
 
@@ -55,5 +59,15 @@ public class PostService {
         } catch (JSONException e) {
             return null;
         }
+    }
+
+    private boolean validateTitle(String title) {
+        int len = title.length();
+        return len >= 3 && len <= 64;
+    }
+
+    private boolean validateContent(String content) {
+        int len = content.length();
+        return len >= 3 && len <= 4096;
     }
 }

@@ -32,13 +32,12 @@ public class PostController {
             String userName = authentication.getName();
             try {
                 postService.addPostAsString(post, userName);
-                return "\"valid\" : true";
+                return "{\"valid\" : true}";
             } catch (PostCreationException e) {
-                return "\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"";
+                return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
             }
         } else {
-            System.out.println("user is null");
-            return "\"valid\" : false, \"message\" : \"please log in\"";
+            return "{\"valid\" : false, \"message\" : \"please log in\"}";
         }
     }
 
