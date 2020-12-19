@@ -34,7 +34,7 @@ public class UserService {
         }
 
         if (!validatePassword(user.getPassword())) {
-            throw new UserRegisterException("password must be between 6 and 63 characters long");
+            throw new UserRegisterException("password must be between 6 and 64 characters long");
         }
 
         if (!validateEmail(user.getEmail())) {
