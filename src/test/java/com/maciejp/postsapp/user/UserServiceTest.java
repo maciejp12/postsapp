@@ -17,11 +17,11 @@ public class UserServiceTest {
     private static String testGetByNameName = "test_get_user_by_name_name";
     private static String testGetByNameEmail = "test_get_user_by_name_email@example.com";
 
-    private static String testGetByEmailEmail = "test_get_user_by_email_email";
+    private static String testGetByEmailEmail = "test_get_user_by_email_email@example.com";
     private static String testGetByEmailName = "test_get_user_by_email_name";
 
     private static String testDeleteByNameName = "test_delete_user_by_name_name";
-    private static String testDeleteByNameEmail = "test_delete_user_by_name_email";
+    private static String testDeleteByNameEmail = "test_delete_user_by_name_email@example.com";
 
     @BeforeClass
     public static void setup() {
@@ -50,6 +50,7 @@ public class UserServiceTest {
             userService.addUser(testGetByEmailUser);
             userService.addUser(testDeleteByNameUser);
         } catch (UserRegisterException e) {
+            System.out.println(e.getMessage());
             fail();
         }
     }
@@ -117,6 +118,96 @@ public class UserServiceTest {
 
         try {
             userService.addUser(userWithSameEmail);
+            fail("method didn't throw exception");
+        } catch (UserRegisterException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddUserWithTooShortName() {
+        User user = new User();
+
+        user.setName("ab");
+        user.setPassword("password");
+        user.setEmail("test_email@example.com");
+
+        String expectedMessage = "name must be between 3 and 64 characters long";
+
+        try {
+            userService.addUser(user);
+            fail("method didn't throw exception");
+        } catch (UserRegisterException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddUserWithTooLongName() {
+        User user = new User();
+
+        user.setName("qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuix");
+        user.setPassword("password");
+        user.setEmail("test_email@example.com");
+
+        String expectedMessage = "name must be between 3 and 64 characters long";
+
+        try {
+            userService.addUser(user);
+            fail("method didn't throw exception");
+        } catch (UserRegisterException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddUserWithTooShortPassword() {
+        User user = new User();
+
+        user.setName("test_user_1");
+        user.setPassword("passw");
+        user.setEmail("test_email@example.com");
+
+        String expectedMessage = "password must be between 6 and 63 characters long";
+
+        try {
+            userService.addUser(user);
+            fail("method didn't throw exception");
+        } catch (UserRegisterException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddUserWithTooLongPassword() {
+        User user = new User();
+
+        user.setName("test_user_1");
+        user.setPassword("qwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuiqwertyuix");
+        user.setEmail("test_email@example.com");
+
+        String expectedMessage = "password must be between 6 and 63 characters long";
+
+        try {
+            userService.addUser(user);
+            fail("method didn't throw exception");
+        } catch (UserRegisterException e) {
+            Assert.assertEquals(e.getMessage(), expectedMessage);
+        }
+    }
+
+    @Test
+    public void testAddUserWithInvalidEmail() {
+        User user = new User();
+
+        user.setName("test_user_1");
+        user.setPassword("password");
+        user.setEmail("invalid_email@examplecom");
+
+        String expectedMessage = "email is not valid";
+
+        try {
+            userService.addUser(user);
             fail("method didn't throw exception");
         } catch (UserRegisterException e) {
             Assert.assertEquals(e.getMessage(), expectedMessage);
