@@ -56,3 +56,7 @@ header {
 .post-list {
     padding: 20;
 }
+
+.undecorated {
+    text-decoration: none;
+}
