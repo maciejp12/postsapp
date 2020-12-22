@@ -45,18 +45,6 @@ header {
    color: #222222;
 }
 
-.post-element {
-    border-radius: 15px;
-    background: #DDDDDD;
-    padding: 20px; 
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-.post-list {
-    padding: 20;
-}
-
 .undecorated {
     text-decoration: none;
 }

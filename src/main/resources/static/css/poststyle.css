@@ -1,0 +1,36 @@
+.post-element {
+    border-radius: 15px;
+    background: #DDDDDD;
+    padding: 20px; 
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+.post-list {
+    padding: 20;
+}
+
+.post-element-title {
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #444444;
+}
+
+.post-element-info {
+    font-style: italic;
+    font-size: 13px;
+    color: #888888;
+}
+
+.post-element-content {
+    font-size: 14px;
+}
+
+.post-element-author {
+    text-decoration: none;
+    color: #000000;
+    font-style: normal;
+    font-weight: bold;
+}

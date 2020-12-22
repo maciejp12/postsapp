@@ -53,19 +53,24 @@ const createNewPost = (postJSON) => {
 
     post.classList.add('post-element');
 
-    var title = document.createElement('h2');
-    var author = document.createElement('h5');
+    var title = document.createElement('a');
+    var info = document.createElement('p');
     var content = document.createElement('p');
-    var creationDate = document.createElement('p');
+    
+
+    title.href = '#';
+    title.onclick = '';
+    
+    title.classList.add('post-element-title');
+    info.classList.add('post-element-info');
+    content.classList.add('post-element-content')
 
     title.innerHTML = postJSON.title;
-    author.innerHTML = postJSON.author;
-    creationDate.innerHTML = postJSON.creationDate;
+    info.innerHTML = 'Created by <a href="#" class="post-element-author">' + postJSON.author + '</a> on ' + postJSON.creationDate;
     content.innerHTML = postJSON.content;
 
     post.appendChild(title);
-    post.appendChild(author);
-    post.appendChild(creationDate)
+    post.append(info);
     post.appendChild(content);
 
     return post;
