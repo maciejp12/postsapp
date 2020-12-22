@@ -1,4 +1,4 @@
-const postsUrl = 'http://127.0.0.1:8080/api/posts';
+const postsUrl = 'http://127.0.0.1:8080/api/posts/head';
 
 const sendGetRequest = () => {
     getRequest.open('GET', postsUrl, true);
@@ -20,6 +20,7 @@ const getAllPosts = () => {
 
     getAllRequest.onreadystatechange = () => {
         if (getAllRequest.readyState == XMLHttpRequest.DONE) {
+            console.log(getAllRequest.responseText);
             var json = JSON.parse(getAllRequest.responseText);
             createPostsList(json)        
         }
@@ -38,6 +39,10 @@ const createPostsList = (postsArray) => {
     let i = 0;
 
     for (const post in postsArray) {
+        if (postsArray[post].content.length == 61) {
+            postsArray[post].content += '...';
+        }
+
         let postHTML = createNewPost(postsArray[post]);
         postsList.appendChild(postHTML);
         postHTML.style.backgroundColor = postBgColors[i % postBgColors.length]

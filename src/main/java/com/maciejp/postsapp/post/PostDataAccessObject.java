@@ -54,6 +54,40 @@ public class PostDataAccessObject {
         }
     }
 
+
+    public List<Post> selectAllPostsHeads(int headLength) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            List<Post> result = new ArrayList<>();
+
+            String sql = "SELECT post_id, title, users.name, SUBSTR(content, 1, ? ) AS content_head, creation_date " +
+                    "FROM posts " + "JOIN users ON posts.author = users.user_id " +
+                    "ORDER BY " + "creation_date DESC";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, headLength);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                result.add(new Post(resultSet.getLong(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5)));
+            }
+
+            return result;
+        } catch (ClassNotFoundException | SQLException e) {
+            return new ArrayList<Post>();
+        } finally {
+            close();
+        }
+    }
+
     public Post selectPostByTitle(String title) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

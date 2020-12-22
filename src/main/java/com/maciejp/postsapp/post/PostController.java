@@ -25,6 +25,11 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    @GetMapping("/head")
+    public List<Post> getAllPostHeads() {
+        return postService.getAllPostsHeads();
+    }
+
     @PostMapping
     public String addPost(@RequestBody String post) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

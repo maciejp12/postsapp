@@ -24,6 +24,10 @@ public class PostService {
         return postDataAccessObject.selectAllPosts();
     }
 
+    public List<Post> getAllPostsHeads() {
+        return postDataAccessObject.selectAllPostsHeads(61);
+    }
+
     public Post getPostByTitle(String title) {
         return postDataAccessObject.selectPostByTitle(title);
     }
