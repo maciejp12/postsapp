@@ -28,6 +28,10 @@ public class PostService {
         return postDataAccessObject.selectAllPostsHeads(61);
     }
 
+    public Post getPostById(long id) {
+        return postDataAccessObject.selectPostById(id);
+    }
+
     public Post getPostByTitle(String title) {
         return postDataAccessObject.selectPostByTitle(title);
     }
