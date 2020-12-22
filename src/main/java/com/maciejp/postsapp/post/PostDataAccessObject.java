@@ -28,7 +28,7 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             List<Post> result = new ArrayList<>();
 
-            String sql = "SELECT post_id, title, author, content, creation_date FROM posts " +
+            String sql = "SELECT post_id, title, users.name, content, creation_date FROM posts " +
                     "JOIN users ON posts.author = users.user_id ORDER BY " +
                     "creation_date DESC";
 
