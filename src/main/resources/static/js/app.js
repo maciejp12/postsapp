@@ -29,6 +29,7 @@ const getAllPosts = () => {
 }
 
 const postBgColors = ['#e0e9ff', '#c9d9ff'];
+const titleOnMouseOverColor = '#111111';
 
 const createPostsList = (postsArray) => {
     let postsList = document.createElement('div');
@@ -68,6 +69,14 @@ const createNewPost = (postJSON) => {
     info.classList.add('post-element-info');
     content.classList.add('post-element-content')
     
+    title.onmouseover = () => {
+        title.style.color = titleOnMouseOverColor;
+    }
+
+    title.onmouseout = () => {
+        title.style.color = null;
+    }
+
     title.onclick = () => {
         showPost(postJSON.postId)
     }
@@ -113,6 +122,7 @@ const getPostById = (id) => {
         if (getByIdRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(getByIdRequest.responseText);
             loadPost(json);
+            loadComments(id);
         }
     }
 }
@@ -149,6 +159,14 @@ var loadPost = (postJSON) => {
     postElement.appendChild(info);
     postElement.appendChild(content);
 
-    container.appendChild(postElement);
-    
+    container.appendChild(postElement);   
+}
+
+var loadComments = (id) => {
+    console.log('a');
+    let commentsContainer = document.createElement('div');
+    commentsContainer.innerHTML = '<p>comments here</p>';
+    commentsContainer.classList.add('comments-container');
+
+    document.getElementById('posts_container').appendChild(commentsContainer);
 }
