@@ -12,9 +12,10 @@
 }
 
 .post-element-title {
+    background-color: inherit;
+    border: none;
     font-size: 30px;
     font-weight: bold;
-    text-decoration: none;
     color: #444444;
 }
 
@@ -25,7 +26,10 @@
 }
 
 .post-element-content {
-    font-size: 14px;
+    font-size: 19px;
+    word-wrap: normal;
+    margin-left: 10px;
+    white-space: pre-wrap;
 }
 
 .post-element-author {

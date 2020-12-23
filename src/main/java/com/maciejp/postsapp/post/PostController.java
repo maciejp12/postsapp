@@ -25,10 +25,16 @@ public class PostController {
         return postService.getAllPosts();
     }
 
+    @GetMapping("/{id}")
+    public Post getPostById(@PathVariable("id") long id) {
+        return postService.getPostById(id);
+    }
+
     @GetMapping("/head")
     public List<Post> getAllPostHeads() {
         return postService.getAllPostsHeads();
     }
+
 
     @PostMapping
     public String addPost(@RequestBody String post) {
