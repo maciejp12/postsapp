@@ -105,6 +105,7 @@ const addReturnButton = () => {
     returnBtn.onclick = () => {
         //TODO clean first
         document.getElementById('cur_post').remove();
+        document.getElementById('comments_container').remove();
         returnBtn.remove();
         getAllPosts();
     }
@@ -165,6 +166,7 @@ var loadPost = (postJSON) => {
 var loadComments = (id) => {
     console.log('a');
     let commentsContainer = document.createElement('div');
+    commentsContainer.id = 'comments_container';
     commentsContainer.innerHTML = '<p>comments here</p>';
     commentsContainer.classList.add('comments-container');
 
