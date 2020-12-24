@@ -41,7 +41,7 @@ const createPostsList = (postsArray) => {
     let i = 0;
 
     for (const post in postsArray) {
-        if (postsArray[post].content.length == 127) {
+        if (postsArray[post].content.length == 64) {
             postsArray[post].content += '...';
         }
 
@@ -105,7 +105,7 @@ const addReturnButton = () => {
     returnBtn.onclick = () => {
         //TODO clean first
         document.getElementById('cur_post').remove();
-        document.getElementById('comments_container').remove();
+        document.getElementById('comments_container').style.display = 'none';
         returnBtn.remove();
         getAllPosts();
     }
@@ -164,11 +164,18 @@ var loadPost = (postJSON) => {
 }
 
 var loadComments = (id) => {
-    console.log('a');
-    let commentsContainer = document.createElement('div');
+    /*let commentsContainer = document.createElement('div');
     commentsContainer.id = 'comments_container';
+
     commentsContainer.innerHTML = '<p>comments here</p>';
+
     commentsContainer.classList.add('comments-container');
+    */
+
+    document.getElementById('comments_container').style.display = 'block';
+
+    addCommentBtn = document.createElement('button');
+    addCommentBtn.classList.add('add-com-button');
 
     document.getElementById('posts_container').appendChild(commentsContainer);
 }

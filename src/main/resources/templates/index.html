@@ -40,5 +40,17 @@
         </script>
     </div>
 
+    <div id="comments_container" class="comments-container" style="display: none;">
+        <div sec:authorize="!isFullyAuthenticated()" id="add_com_notauth">
+            <p>Please log in to comment</p>
+        </div>
+
+        <div sec:authorize="isFullyAuthenticated()" id="add_com_auth">
+            <p>add new comment as <b>[[${#request.userPrincipal.principal.name}]]</b></p>
+        </div>
+
+        <p>comments-here</p>
+    </div>
+
 </body>
 </html>

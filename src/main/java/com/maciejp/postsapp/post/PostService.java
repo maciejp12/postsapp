@@ -25,7 +25,7 @@ public class PostService {
     }
 
     public List<Post> getAllPostsHeads() {
-        return postDataAccessObject.selectAllPostsHeads(127);
+        return postDataAccessObject.selectAllPostsHeads(64);
     }
 
     public Post getPostById(long id) {
