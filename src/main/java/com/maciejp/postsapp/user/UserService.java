@@ -1,6 +1,6 @@
 package com.maciejp.postsapp.user;
 
-import com.maciejp.postsapp.expection.UserRegisterException;
+import com.maciejp.postsapp.exception.UserRegisterException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

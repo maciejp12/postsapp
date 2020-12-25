@@ -1,6 +1,6 @@
 package com.maciejp.postsapp.post;
 
-import com.maciejp.postsapp.expection.PostCreationException;
+import com.maciejp.postsapp.exception.PostCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

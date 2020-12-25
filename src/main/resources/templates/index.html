@@ -46,7 +46,7 @@
         </div>
 
         <div sec:authorize="isFullyAuthenticated()" id="add_com_auth">
-            <p>add new comment as <b>[[${#request.userPrincipal.principal.name}]]</b></p>
+            <button onclick="showAddCommentTools();">add new comment as <b>[[${#request.userPrincipal.principal.name}]]</b></button>
         </div>
 
         <p>comments-here</p>

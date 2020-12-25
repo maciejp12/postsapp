@@ -1,4 +1,4 @@
-package com.maciejp.postsapp.expection;
+package com.maciejp.postsapp.exception;
 
 public class UserRegisterException extends Throwable {
 

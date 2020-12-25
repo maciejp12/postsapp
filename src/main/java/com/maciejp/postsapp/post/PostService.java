@@ -1,8 +1,6 @@
 package com.maciejp.postsapp.post;
 
-import com.maciejp.postsapp.expection.PostCreationException;
-import com.maciejp.postsapp.user.User;
-import com.maciejp.postsapp.user.UserService;
+import com.maciejp.postsapp.exception.PostCreationException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

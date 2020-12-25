@@ -1,12 +1,11 @@
 package com.maciejp.postsapp.post;
 
-import com.maciejp.postsapp.expection.PostCreationException;
-import com.maciejp.postsapp.expection.UserRegisterException;
+import com.maciejp.postsapp.exception.PostCreationException;
+import com.maciejp.postsapp.exception.UserRegisterException;
 import com.maciejp.postsapp.user.User;
 import com.maciejp.postsapp.user.UserDataAccessObject;
 import com.maciejp.postsapp.user.UserService;
 import org.junit.*;
-import org.springframework.test.context.TestExecutionListeners;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

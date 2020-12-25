@@ -1,11 +1,11 @@
 package com.maciejp.postsapp.comment;
 
+import com.maciejp.postsapp.exception.CommentCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,8 +19,24 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping
-    public List<Comment> getAllComments() {
-        return new ArrayList<Comment>();
+    @GetMapping("/parent/{id}")
+    public List<Comment> getAllCommentsOfPost(@PathVariable("id") long id) {
+        return commentService.getAllCommentsOfPost(id);
+    }
+
+    @PostMapping
+    public String addComment(@RequestBody String comment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String userName = authentication.getName();
+            try {
+                commentService.addCommentAsString(comment, userName);
+                return "{\"valid\" : true}";
+            } catch (CommentCreationException e) {
+                return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
+            }
+        } else {
+            return "{\"valid\" : false, \"message\" : \"please log in\"}";
+        }
     }
 }

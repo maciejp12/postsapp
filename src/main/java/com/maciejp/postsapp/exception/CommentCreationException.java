@@ -1,10 +1,10 @@
-package com.maciejp.postsapp.expection;
+package com.maciejp.postsapp.exception;
 
-public class PostCreationException extends Throwable {
+public class CommentCreationException extends Throwable {
 
     private final String message;
 
-    public PostCreationException(String message) {
+    public CommentCreationException(String message) {
         this.message = message;
     }
 

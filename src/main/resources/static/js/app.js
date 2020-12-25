@@ -1,5 +1,5 @@
 const postsUrl = 'http://127.0.0.1:8080/api/posts';
-
+const commentsUrl = 'http://127.0.0.1:8080/api/comments';
 
 const sendGetRequest = () => {
     getRequest.open('GET', postsUrl, true);
@@ -164,18 +164,29 @@ var loadPost = (postJSON) => {
 }
 
 var loadComments = (id) => {
-    /*let commentsContainer = document.createElement('div');
-    commentsContainer.id = 'comments_container';
-
-    commentsContainer.innerHTML = '<p>comments here</p>';
-
-    commentsContainer.classList.add('comments-container');
-    */
 
     document.getElementById('comments_container').style.display = 'block';
 
-    addCommentBtn = document.createElement('button');
-    addCommentBtn.classList.add('add-com-button');
-
     document.getElementById('posts_container').appendChild(commentsContainer);
+}
+
+var showAddCommentTools = (id) => {
+    var cxhr = new XMLHttpRequest();
+
+    cxhr.open('POST', commentsUrl, true);
+    let test = {
+        'parentId' : 150,
+        'parentCommentId' : null,
+        'text' : 'test text',
+    }
+
+    cxhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    cxhr.send(JSON.stringify(test));
+
+    cxhr.onreadystatechange = () => {
+        if (cxhr.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(cxhr.responseText);
+            console.log(json);
+        }
+    }
 }

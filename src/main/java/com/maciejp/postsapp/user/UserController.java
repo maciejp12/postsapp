@@ -1,6 +1,6 @@
 package com.maciejp.postsapp.user;
 
-import com.maciejp.postsapp.expection.UserRegisterException;
+import com.maciejp.postsapp.exception.UserRegisterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
