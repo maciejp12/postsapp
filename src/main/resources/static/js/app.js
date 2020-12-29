@@ -107,6 +107,7 @@ const addReturnButton = () => {
         document.getElementById('cur_post').remove();
         document.getElementById('comments_container').style.display = 'none';
         returnBtn.remove();
+        curPostId = null;
         getAllPosts();
     }
 
@@ -128,9 +129,12 @@ const getPostById = (id) => {
     }
 }
 
+var curPostId = null;
+
 var showPost = (id) => {
     disposePostsList();
     addReturnButton();
+    curPostId = id;
     getPostById(id);
 }
 
@@ -164,29 +168,32 @@ var loadPost = (postJSON) => {
 }
 
 var loadComments = (id) => {
-
     document.getElementById('comments_container').style.display = 'block';
-
-    document.getElementById('posts_container').appendChild(commentsContainer);
 }
 
-var showAddCommentTools = (id) => {
+var addNewComment = () => {
     var cxhr = new XMLHttpRequest();
 
+    // TODO validate text input
+    let comText = document.getElementById('comment_content').value;
+
     cxhr.open('POST', commentsUrl, true);
-    let test = {
-        'parentId' : 150,
+    
+    let commentJSON = {
+        'parentId' : curPostId,
         'parentCommentId' : null,
-        'text' : 'test text',
+        'text' : comText
     }
 
     cxhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    cxhr.send(JSON.stringify(test));
 
     cxhr.onreadystatechange = () => {
         if (cxhr.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(cxhr.responseText);
+            document.getElementById('comment_content').value = '';
             console.log(json);
         }
     }
+
+    cxhr.send(JSON.stringify(commentJSON));
 }

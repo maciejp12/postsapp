@@ -1,7 +1,37 @@
 .comments-container {
-    background-color: #375915;
+    background-color: #c9d9ff;
+    padding: 20px; 
+    margin-top: 15px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+}
+
+.add-comment-container {
+    padding: 10px 10px 10px 10px;
+}
+
+.add-com-textarea {
+    border-radius: 8px;
+    height: 100px;
+    width: 80%;
+    border-color: #709bff;
+    resize: none;
+}
+
+.add-com-message {
+    margin: 10px 10px 10px 10px;
 }
 
 .add-com-button {
-    background-color: aliceblue;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #c9d9ff;
+    color: #000000;
+    border-radius: 5px;
+    font-size: 20px;
+    border-width: 5px;
+    border-color: #709bff;
 }
+
+
+
