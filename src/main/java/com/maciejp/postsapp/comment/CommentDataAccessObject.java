@@ -114,6 +114,28 @@ public class CommentDataAccessObject {
         }
     }
 
+    public void updatePoints(long id, int value) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
+            
+            String selectAuthorSql = "UPDATE comments SET points = points + ? where comment_id = ?";
+
+            statement = connection.prepareStatement(selectAuthorSql);
+            statement.setInt(1, value);
+            statement.setLong(2, id);
+
+            statement.executeUpdate();
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
     private void close() {
         if (connection != null) {
             try {

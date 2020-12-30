@@ -39,4 +39,13 @@ public class CommentController {
             return "{\"valid\" : false, \"message\" : \"please log in\"}";
         }
     }
+
+    @PatchMapping("/points/dec/{id}")
+    public String decrementCommentPoints(@PathVariable("id") long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            commentService.decrementCommentPoints(id);
+        }
+        return "";
+    }
 }

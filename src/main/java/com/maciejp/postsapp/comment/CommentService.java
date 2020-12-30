@@ -30,6 +30,11 @@ public class CommentService {
         commentDataAccessObject.addComment(c);
     }
 
+
+    public void decrementCommentPoints(long id) {
+        commentDataAccessObject.updatePoints(id, -1);
+    }
+
     private Comment parseCommentJSON(String commentJSON, String author) {
         long parentCommentId;
         long parentId;
