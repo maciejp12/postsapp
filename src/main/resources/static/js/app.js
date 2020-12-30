@@ -105,6 +105,7 @@ const addReturnButton = () => {
     returnBtn.onclick = () => {
         //TODO clean first
         document.getElementById('cur_post').remove();
+        document.getElementById('comments_list').remove();
         document.getElementById('comments_container').style.display = 'none';
         returnBtn.remove();
         curPostId = null;
@@ -169,13 +170,74 @@ var loadPost = (postJSON) => {
 
 var loadComments = (id) => {
     document.getElementById('comments_container').style.display = 'block';
+
+    var getCommentsByIdRequest = new XMLHttpRequest();
+
+    getCommentsByIdRequest.open('GET', commentsUrl + '/parent/' + id, true);
+    getCommentsByIdRequest.send(null);
+
+    getCommentsByIdRequest.onreadystatechange = () => {
+        if (getCommentsByIdRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(getCommentsByIdRequest.responseText);
+            console.log(json);
+            createCommentsList(json);
+        }
+    }
+}
+
+var isAuth = () => {
+    let authDiv = document.getElementById('add_com_auth');
+    return authDiv != null;   
+}
+
+var createCommentsList = (comments) => {
+    var commentsList = document.createElement('div');
+    commentsList.classList.add('comments-list');
+    commentsList.id = 'comments_list';
+
+    for (const i in comments) {
+        let comment = comments[i];
+
+        var commentElement = document.createElement('div');
+        commentElement.classList.add('comment-element');
+
+        var commentInfo = document.createElement('p');
+        commentInfo.classList.add('comment-info');
+        commentInfo.innerHTML = '<b>' + comment.author + '</b>' + ' , ' + comment.creationDate;
+
+        var commentText = document.createElement('p');
+        commentText.classList.add('comment-text');
+        commentText.innerHTML = comment.text;
+
+        var responseBtn = document.createElement('button');
+        responseBtn.classList.add('comment-response-btn');
+        responseBtn.innerHTML = 'respond';
+
+        commentElement.appendChild(commentInfo);
+        commentElement.appendChild(commentText);
+        if (isAuth ()) {
+            commentElement.appendChild(responseBtn);
+        }
+        
+        commentsList.appendChild(commentElement);
+    }
+
+    document.getElementById('comments_container').appendChild(commentsList);
 }
 
 var addNewComment = () => {
     var cxhr = new XMLHttpRequest();
 
-    // TODO validate text input
     let comText = document.getElementById('comment_content').value;
+    let errorMessage = document.getElementById('add_com_message');
+
+    if (comText == '') {
+        errorMessage.style.color = '#FF0000';
+        errorMessage.innerHTML = 'please enter comment text';    
+        return;
+    }
+
+    errorMessage.innerHTML = '';
 
     cxhr.open('POST', commentsUrl, true);
     
@@ -191,6 +253,8 @@ var addNewComment = () => {
         if (cxhr.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(cxhr.responseText);
             document.getElementById('comment_content').value = '';
+            document.getElementById('comments_list').remove();
+            loadComments(curPostId);
             console.log(json);
         }
     }

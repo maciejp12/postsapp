@@ -33,5 +33,26 @@
     border-color: #709bff;
 }
 
+.comments-list {
 
+}
+
+.comment-element {
+    background-color: #e0e9ff;
+    margin: 15px;
+    border-radius: 15px;
+    width: 50%;
+}
+
+.comment-info {
+
+}
+
+.comment-text {
+
+}
+
+.comment-response-btn {
+    margin: 10px;
+}
 

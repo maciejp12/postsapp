@@ -31,7 +31,7 @@ public class CommentDataAccessObject {
             String sql = "SELECT comment_id, u.name, parent, points, parent_comment, comment_text, creation_date " +
                     "FROM comments JOIN users AS u ON comments.author = u.user_id " +
                     "WHERE parent = ? " +
-                    "ORDER BY points";
+                    "ORDER BY points, creation_date DESC";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
                     dbUserName, dbUserPassword);
@@ -42,11 +42,15 @@ public class CommentDataAccessObject {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
+                long parentCommentId = resultSet.getLong(5);
+                if (resultSet.wasNull()) {
+                    parentCommentId = -1;
+                }
                 result.add(new Comment(resultSet.getLong(1),
                         resultSet.getString(2),
                         resultSet.getLong(3),
                         resultSet.getInt(4),
-                        resultSet.getLong(5),
+                        parentCommentId,
                         resultSet.getString(6),
                         resultSet.getTimestamp(7)));
             }
