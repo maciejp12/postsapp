@@ -198,31 +198,70 @@ var createCommentsList = (comments) => {
     for (const i in comments) {
         let comment = comments[i];
 
-        var commentElement = document.createElement('div');
+        let commentElement = document.createElement('div');
         commentElement.classList.add('comment-element');
 
-        var commentInfo = document.createElement('p');
+        let commentInfo = document.createElement('p');
         commentInfo.classList.add('comment-info');
-        commentInfo.innerHTML = '<b>' + comment.author + '</b>' + ' , ' + comment.creationDate;
+        commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + comment.author + '</a></b>' + ' , ' + comment.creationDate;
 
-        var commentText = document.createElement('p');
+        let commentText = document.createElement('p');
         commentText.classList.add('comment-text');
         commentText.innerHTML = comment.text;
 
-        var responseBtn = document.createElement('button');
-        responseBtn.classList.add('comment-response-btn');
-        responseBtn.innerHTML = 'respond';
-
         commentElement.appendChild(commentInfo);
         commentElement.appendChild(commentText);
-        if (isAuth ()) {
+
+        if (isAuth()) {
+            let responseBtn = document.createElement('button');
+            responseBtn.classList.add('comment-response-btn');
+            responseBtn.innerHTML = 'respond';
+
+            responseBtn.onclick = () => {
+                responseBtn.style.display = 'none';
+                commentElement.appendChild(createCommentResponseTools(comment, responseBtn));        
+            }
             commentElement.appendChild(responseBtn);
+
         }
         
         commentsList.appendChild(commentElement);
     }
 
     document.getElementById('comments_container').appendChild(commentsList);
+}
+
+var createCommentResponseTools = (comment, responseBtn) => {
+    let responseTools = document.createElement('div');
+
+    let responseTextarea = document.createElement('textarea');
+    responseTextarea.classList.add('response-text-area');
+
+    let responseSubmitBtn = document.createElement('button');
+    responseSubmitBtn.classList.add('response-button');
+    responseSubmitBtn.innerHTML = 'submit';
+
+    responseSubmitBtn.onclick = () => {
+        addNewChildComment(responseTextarea.value, comment.commentId);
+        responseBtn.style.display = 'block';
+        responseTools.remove();
+        // TODO refresh comments list
+    }
+
+    let cancelBtn = document.createElement('button');
+    cancelBtn.classList.add('response-button');
+    cancelBtn.innerHTML = 'cancel';
+
+    cancelBtn.onclick = () => {
+        responseBtn.style.display = 'block';
+        responseTools.remove();
+    }
+
+    responseTools.appendChild(responseTextarea);
+    responseTools.appendChild(responseSubmitBtn);
+    responseTools.appendChild(cancelBtn);
+
+    return responseTools;
 }
 
 var addNewComment = () => {
@@ -260,4 +299,28 @@ var addNewComment = () => {
     }
 
     cxhr.send(JSON.stringify(commentJSON));
+}
+
+
+var addNewChildComment = (text, parentCommentId) => {
+    var childCommentRequest = new XMLHttpRequest();
+
+    childCommentRequest.open('POST', commentsUrl, true);
+    
+    let commentJSON = {
+        'parentId' : curPostId,
+        'parentCommentId' : parentCommentId,
+        'text' : text
+    }
+
+    childCommentRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    childCommentRequest.onreadystatechange = () => {
+        if (childCommentRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(childCommentRequest.responseText);
+            console.log(json);
+        }
+    }
+
+    childCommentRequest.send(JSON.stringify(commentJSON));
 }
