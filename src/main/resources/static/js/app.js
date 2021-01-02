@@ -198,6 +198,16 @@ var createCommentsList = (comments) => {
     for (const i in comments) {
         let comment = comments[i];
 
+        let commentContainer = document.createElement('div');
+        commentContainer.classList.add('comment-container');
+
+        let commentScore = document.createElement('div');
+        commentScore.classList.add('comment-score');
+
+        let commentPoints = document.createElement('h1');
+        commentPoints.classList.add('comment-score-points');
+        commentPoints.innerHTML = comment.points;
+
         let commentElement = document.createElement('div');
         commentElement.classList.add('comment-element');
 
@@ -209,10 +219,27 @@ var createCommentsList = (comments) => {
         commentText.classList.add('comment-text');
         commentText.innerHTML = comment.text;
 
+        commentScore.appendChild(commentPoints);
+
         commentElement.appendChild(commentInfo);
         commentElement.appendChild(commentText);
 
         if (isAuth()) {
+
+            let commentPlus = document.createElement('button');
+            commentPlus.classList.add('comment-score-btn');
+            commentPlus.innerHTML = '+';
+
+            let commentMinus = document.createElement('button');
+            commentMinus.classList.add('comment-score-btn');
+            commentMinus.innerHTML = '-';
+
+            commentPoints.remove();
+            commentScore.appendChild(commentPlus);
+            commentScore.appendChild(commentPoints);
+            commentScore.appendChild(commentMinus);
+        
+
             let responseBtn = document.createElement('button');
             responseBtn.classList.add('comment-response-btn');
             responseBtn.innerHTML = 'respond';
@@ -225,7 +252,10 @@ var createCommentsList = (comments) => {
 
         }
         
-        commentsList.appendChild(commentElement);
+        commentContainer.appendChild(commentScore);
+        commentContainer.appendChild(commentElement);
+
+        commentsList.appendChild(commentContainer);
     }
 
     document.getElementById('comments_container').appendChild(commentsList);

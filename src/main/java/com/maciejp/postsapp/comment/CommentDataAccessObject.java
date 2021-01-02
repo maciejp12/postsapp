@@ -89,7 +89,7 @@ public class CommentDataAccessObject {
             }
 
             String sql = "INSERT INTO comments(author, parent, parent_comment, comment_text, creation_date) " +
-                    "VALUES( ? ,  ?  , ? , ? , now())";
+                    "VALUES( ? , ? , ? , ? , now())";
 
 
             long parentCommentId = comment.getParentCommentId();
@@ -98,13 +98,12 @@ public class CommentDataAccessObject {
 
             statement.setLong(1, authorId);
             statement.setLong(2, comment.getParentId());
-            statement.setInt(3, comment.getPoints());
             if (parentCommentId != -1) {
-                statement.setLong(4, comment.getParentCommentId());
+                statement.setLong(3, comment.getParentCommentId());
             } else {
-                statement.setNull(4, Types.INTEGER);
+                statement.setNull(3, Types.INTEGER);
             }
-            statement.setString(5, comment.getText());
+            statement.setString(4, comment.getText());
 
             statement.executeUpdate();
 

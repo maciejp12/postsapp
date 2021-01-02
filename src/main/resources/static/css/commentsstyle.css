@@ -37,11 +37,30 @@
 
 }
 
-.comment-element {
+.comment-container {
     background-color: #e0e9ff;
     margin: 15px;
     border-radius: 15px;
     width: 50%;
+    display: flex;;
+}
+
+.comment-score {
+    width: 10%;
+}
+
+.comment-score-points {
+    text-align: center;
+}
+
+.comment-score-btn {
+    width: 50%;
+    text-align: center;
+    margin-left: 25%;
+}
+
+.comment-element {
+    width: 90%;
 }
 
 .comment-info {
