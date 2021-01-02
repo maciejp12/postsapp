@@ -32,7 +32,7 @@ public class CommentDataAccessObject {
                     "FROM (comments JOIN users AS u ON comments.author = u.user_id) " +
                     "LEFT JOIN (SELECT comment , SUM(value) AS score FROM points GROUP BY comment) AS p " +
                     "ON p.comment = comment_id WHERE parent = ? " +
-                    "ORDER BY score, creation_date DESC";
+                    "ORDER BY score DESC, creation_date DESC";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
                     dbUserName, dbUserPassword);
