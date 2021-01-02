@@ -28,7 +28,6 @@ CREATE TABLE `comments` (
   `comment_id` int NOT NULL AUTO_INCREMENT,
   `author` int NOT NULL,
   `parent` int NOT NULL,
-  `points` int NOT NULL,
   `parent_comment` int DEFAULT NULL,
   `comment_text` varchar(256) NOT NULL,
   `creation_date` datetime NOT NULL,
@@ -39,7 +38,7 @@ CREATE TABLE `comments` (
   CONSTRAINT `fk_comment_author` FOREIGN KEY (`author`) REFERENCES `users` (`user_id`),
   CONSTRAINT `fk_comments_parent` FOREIGN KEY (`parent`) REFERENCES `posts` (`post_id`),
   CONSTRAINT `fk_comments_parent_comment` FOREIGN KEY (`parent_comment`) REFERENCES `comments` (`comment_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,8 +47,39 @@ CREATE TABLE `comments` (
 
 LOCK TABLES `comments` WRITE;
 /*!40000 ALTER TABLE `comments` DISABLE KEYS */;
-INSERT INTO `comments` VALUES (1,10,150,0,NULL,'test text','2020-12-25 16:48:47');
+INSERT INTO `comments` VALUES (26,10,150,NULL,'test','2020-12-29 13:07:23'),(27,10,150,NULL,'hey test','2020-12-29 13:24:33'),(28,69,150,NULL,'this is a test comment','2020-12-29 13:25:42'),(29,10,147,NULL,'34','2020-12-30 12:13:33'),(30,10,150,NULL,'34r','2020-12-30 12:13:47'),(31,10,150,NULL,'123','2020-12-30 12:32:12'),(32,10,150,NULL,'23e','2020-12-30 12:33:12'),(33,10,150,NULL,'efefef','2020-12-30 12:33:15'),(34,10,150,NULL,'w','2020-12-30 12:33:21'),(35,10,150,NULL,'ahaaahaaaha','2020-12-30 12:33:30'),(36,10,150,NULL,'34f','2020-12-30 12:34:34'),(37,10,150,NULL,'34r','2020-12-30 12:43:31'),(38,10,150,NULL,'2r4','2020-12-30 17:24:04'),(39,10,150,NULL,'34r43r34r','2020-12-30 17:24:07'),(40,10,146,NULL,'comment','2020-12-30 17:39:23'),(41,10,146,NULL,'comment2','2020-12-30 17:39:27'),(42,10,150,NULL,'45t','2020-12-30 17:57:21'),(43,10,145,NULL,'r','2020-12-30 18:12:45'),(44,10,145,NULL,'2323e','2020-12-30 18:12:50'),(45,10,81,NULL,'nceq','2020-12-30 18:13:32'),(46,10,81,NULL,'2','2020-12-30 18:13:38'),(47,10,81,NULL,'2','2020-12-30 18:13:41'),(48,10,81,NULL,'3','2020-12-30 18:13:42'),(49,10,81,NULL,'4','2020-12-30 18:13:43'),(50,10,150,NULL,'weffew','2020-12-30 18:27:15'),(51,10,150,NULL,'tette','2020-12-30 18:27:21'),(52,10,150,NULL,'pcmqawe','2020-12-30 18:28:03'),(53,10,150,52,'sa3','2020-12-30 18:29:47');
 /*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `points`
+--
+
+DROP TABLE IF EXISTS `points`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `points` (
+  `points_id` int NOT NULL AUTO_INCREMENT,
+  `author` int NOT NULL,
+  `comment` int NOT NULL,
+  `value` int NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`points_id`),
+  KEY `fk_points_author_idx` (`author`),
+  KEY `fk_points_comment_idx` (`comment`),
+  CONSTRAINT `fk_points_author` FOREIGN KEY (`author`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `fk_points_comment` FOREIGN KEY (`comment`) REFERENCES `comments` (`comment_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `points`
+--
+
+LOCK TABLES `points` WRITE;
+/*!40000 ALTER TABLE `points` DISABLE KEYS */;
+INSERT INTO `points` VALUES (1,5,27,1,'2021-01-02 18:47:16'),(2,5,27,1,'2021-01-02 18:48:18'),(3,5,27,1,'2021-01-02 18:48:18'),(4,5,27,1,'2021-01-02 18:48:19'),(5,5,26,-1,'2021-01-02 18:50:02'),(6,5,26,-1,'2021-01-02 18:50:03');
+/*!40000 ALTER TABLE `points` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -68,7 +98,7 @@ CREATE TABLE `posts` (
   PRIMARY KEY (`post_id`),
   KEY `fk_author_idx` (`author`),
   CONSTRAINT `fk_author` FOREIGN KEY (`author`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=153 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +124,7 @@ CREATE TABLE `users` (
   `password` varchar(64) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=169 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,4 +146,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-12-25 16:51:15
+-- Dump completed on 2021-01-02 19:01:18

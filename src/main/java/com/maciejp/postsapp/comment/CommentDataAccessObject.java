@@ -28,10 +28,11 @@ public class CommentDataAccessObject {
 
             List<Comment> result = new ArrayList<>();
 
-            String sql = "SELECT comment_id, u.name, parent, points, parent_comment, comment_text, creation_date " +
-                    "FROM comments JOIN users AS u ON comments.author = u.user_id " +
-                    "WHERE parent = ? " +
-                    "ORDER BY points, creation_date DESC";
+            String sql = "SELECT comment_id, u.name, parent, p.score, parent_comment, comment_text, creation_date " +
+                    "FROM (comments JOIN users AS u ON comments.author = u.user_id) " +
+                    "LEFT JOIN (SELECT comment , SUM(value) AS score FROM points GROUP BY comment) AS p " +
+                    "ON p.comment = comment_id WHERE parent = ? " +
+                    "ORDER BY score, creation_date DESC";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
                     dbUserName, dbUserPassword);
@@ -87,8 +88,8 @@ public class CommentDataAccessObject {
                 authorId = resultSet.getLong(1);
             }
 
-            String sql = "INSERT INTO comments(author, parent, points, parent_comment, comment_text, creation_date) " +
-                    "VALUES( ? ,  ? ,  ? , ? , ? , now())";
+            String sql = "INSERT INTO comments(author, parent, parent_comment, comment_text, creation_date) " +
+                    "VALUES( ? ,  ?  , ? , ? , now())";
 
 
             long parentCommentId = comment.getParentCommentId();
@@ -120,7 +121,7 @@ public class CommentDataAccessObject {
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
                     dbUserName, dbUserPassword);
-            
+
             String selectAuthorSql = "UPDATE comments SET points = points + ? where comment_id = ?";
 
             statement = connection.prepareStatement(selectAuthorSql);
