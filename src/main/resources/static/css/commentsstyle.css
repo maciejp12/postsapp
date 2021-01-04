@@ -46,21 +46,25 @@
 }
 
 .comment-score {
-    width: 10%;
+    width: 15%;
+    
 }
 
 .comment-score-points {
-    text-align: center;
-}
-
-.comment-score-btn {
-    width: 50%;
-    text-align: center;
     margin-left: 25%;
 }
 
+.comment-score-btn {
+    border-radius: 25%;
+    margin-left: 25%;
+    margin-top: 5%;
+    background-color: #FFFFFF;
+    border-color: #9999CD;
+    font-weight: bold;
+}
+
 .comment-element {
-    width: 90%;
+    width: 85%;
 }
 
 .comment-info {
