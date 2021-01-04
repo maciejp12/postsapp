@@ -229,10 +229,16 @@ var createCommentsList = (comments) => {
             let commentPlus = document.createElement('button');
             commentPlus.classList.add('comment-score-btn');
             commentPlus.innerHTML = '+';
+            commentPlus.onclick = () => {
+                updateCommentPoints(comment.commentId, 1)
+            }
 
             let commentMinus = document.createElement('button');
             commentMinus.classList.add('comment-score-btn');
             commentMinus.innerHTML = '-';
+            commentMinus.onclick = () => {
+                updateCommentPoints(comment.commentId, -1)
+            }
 
             commentPoints.remove();
             commentScore.appendChild(commentPlus);
@@ -292,6 +298,32 @@ var createCommentResponseTools = (comment, responseBtn) => {
     responseTools.appendChild(cancelBtn);
 
     return responseTools;
+}
+
+var updateCommentPoints = (id, value) => {
+    let url = commentsUrl + '/points';
+
+    if (value > 0) {
+        url += '/inc';
+    } else {
+        url += '/dec';
+    }
+
+    url += '/' + id;
+
+    var updatePointsRequest = new XMLHttpRequest();
+
+    updatePointsRequest.open('POST', url, true);
+    updatePointsRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+    updatePointsRequest.onreadystatechange = () => {
+        if (updatePointsRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(updatePointsRequest.responseText);
+            console.log(json);
+        }
+    }
+
+    updatePointsRequest.send(null);
 }
 
 var addNewComment = () => {

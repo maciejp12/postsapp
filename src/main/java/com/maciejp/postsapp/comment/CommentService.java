@@ -1,6 +1,7 @@
 package com.maciejp.postsapp.comment;
 
 import com.maciejp.postsapp.exception.CommentCreationException;
+import com.maciejp.postsapp.exception.UpdatePointsException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,12 @@ public class CommentService {
     }
 
 
-    public void decrementCommentPoints(long id) {
-        commentDataAccessObject.updatePoints(id, -1);
+    public void decrementCommentPoints(String userName, long id) throws UpdatePointsException {
+        commentDataAccessObject.updatePoints(userName, id, -1);
+    }
+
+    public void incrementCommentPoints(String userName, long id) throws UpdatePointsException {
+        commentDataAccessObject.updatePoints(userName, id, 1);
     }
 
     private Comment parseCommentJSON(String commentJSON, String author) {

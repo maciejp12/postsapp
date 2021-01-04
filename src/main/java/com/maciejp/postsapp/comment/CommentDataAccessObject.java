@@ -1,6 +1,7 @@
 package com.maciejp.postsapp.comment;
 
 import com.maciejp.postsapp.exception.CommentCreationException;
+import com.maciejp.postsapp.exception.UpdatePointsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -114,18 +115,52 @@ public class CommentDataAccessObject {
         }
     }
 
-    public void updatePoints(long id, int value) {
+    public void updatePoints(String author, long id, int value) throws UpdatePointsException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
                     dbUserName, dbUserPassword);
 
-            String selectAuthorSql = "UPDATE comments SET points = points + ? where comment_id = ?";
+            long authorId = 0;
+
+            String selectAuthorSql = "SELECT user_id FROM users WHERE name = ? ";
 
             statement = connection.prepareStatement(selectAuthorSql);
-            statement.setInt(1, value);
+            statement.setString(1, author);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                throw new UpdatePointsException("Please log in to create new comment");
+            }
+
+            while (resultSet.next()) {
+                authorId = resultSet.getLong(1);
+            }
+
+            // TODO select first
+
+            String sql = "SELECT * FROM points WHERE author = ? AND comment = ? ";
+
+            statement = connection.prepareStatement(sql);
+
+            statement.setLong(1, authorId);
             statement.setLong(2, id);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.isBeforeFirst()) {
+                throw new UpdatePointsException("Points already updated by this author");
+            }
+
+            sql = "INSERT INTO points(author, comment, value, date) VALUES ( ? , ? , ? , now())";
+
+            statement = connection.prepareStatement(sql);
+
+            statement.setLong(1, authorId);
+            statement.setLong(2, id);
+            statement.setLong(3, value);
 
             statement.executeUpdate();
 

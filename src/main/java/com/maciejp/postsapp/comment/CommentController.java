@@ -1,6 +1,7 @@
 package com.maciejp.postsapp.comment;
 
 import com.maciejp.postsapp.exception.CommentCreationException;
+import com.maciejp.postsapp.exception.UpdatePointsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,12 +41,33 @@ public class CommentController {
         }
     }
 
-    @PatchMapping("/points/dec/{id}")
+    @PostMapping("/points/dec/{id}")
     public String decrementCommentPoints(@PathVariable("id") long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
-            commentService.decrementCommentPoints(id);
+            String userName = authentication.getName();
+            try {
+                commentService.decrementCommentPoints(userName, id);
+                return "{\"valid\" : true}";
+            } catch (UpdatePointsException e) {
+                return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
+            }
         }
-        return "";
+        return "{\"valid\" : false, \"message\" : \"Please log in\"}";
+    }
+
+    @PostMapping("/points/inc/{id}")
+    public String incrementCommentPoints(@PathVariable("id") long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String userName = authentication.getName();
+            try {
+                commentService.incrementCommentPoints(userName, id);
+                return "{\"valid\" : true}";
+            } catch (UpdatePointsException e) {
+                return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
+            }
+        }
+        return "{\"valid\" : false, \"message\" : \"Please log in\"}";
     }
 }
