@@ -55,4 +55,10 @@ public class CommentController {
         }
         return "{\"valid\" : false, \"message\" : \"Please log in\"}";
     }
+
+    @GetMapping("/points/{id}")
+    public String getCommentScore(@PathVariable("id") long id) {
+        int score = commentService.getCommentScore(id);
+        return "{\"score\" : " + score + "}";
+    }
 }

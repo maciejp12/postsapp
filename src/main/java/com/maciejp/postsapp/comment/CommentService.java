@@ -50,6 +50,10 @@ public class CommentService {
         commentDataAccessObject.updatePoints(author, commentId, value);
     }
 
+    public int getCommentScore(long id) {
+        return commentDataAccessObject.selectCommentScore(id);
+    }
+
     private Comment parseCommentJSON(String commentJSON, String author) {
         long parentCommentId;
         long parentId;

@@ -171,6 +171,42 @@ public class CommentDataAccessObject {
         }
     }
 
+    public int selectCommentScore(long id) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            int result = 0;
+
+            String sql = "SELECT p.score " +
+                    "FROM (comments JOIN users AS u ON comments.author = u.user_id) " +
+                    "LEFT JOIN (SELECT comment , SUM(value) AS score " +
+                    "FROM points GROUP BY comment) " +
+                    "AS p ON p.comment = comment_id WHERE comment_id = ? ";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+
+            statement.setLong(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                return 0;
+            }
+
+            while (resultSet.next()) {
+                result = resultSet.getInt(1);
+            }
+
+            return result;
+        } catch (ClassNotFoundException | SQLException e) {
+            return 0;
+        } finally {
+            close();
+        }
+    }
+
     private void close() {
         if (connection != null) {
             try {

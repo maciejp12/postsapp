@@ -230,14 +230,14 @@ var createCommentsList = (comments) => {
             commentPlus.classList.add('comment-score-btn');
             commentPlus.innerHTML = '+';
             commentPlus.onclick = () => {
-                updateCommentPoints(comment.commentId, 1)
+                updateCommentPoints(comment.commentId, 1, commentPoints)
             }
 
             let commentMinus = document.createElement('button');
             commentMinus.classList.add('comment-score-btn');
             commentMinus.innerHTML = '-';
             commentMinus.onclick = () => {
-                updateCommentPoints(comment.commentId, -1)
+                updateCommentPoints(comment.commentId, -1, commentPoints)
             }
 
             commentPoints.remove();
@@ -300,7 +300,7 @@ var createCommentResponseTools = (comment, responseBtn) => {
     return responseTools;
 }
 
-var updateCommentPoints = (id, value) => {
+var updateCommentPoints = (id, value, commentPoints) => {
     let url = commentsUrl + '/points';
 
     let updatePoints = {
@@ -317,10 +317,27 @@ var updateCommentPoints = (id, value) => {
         if (updatePointsRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(updatePointsRequest.responseText);
             console.log(json);
+            if (json.valid) {
+                getCommentScore(id, commentPoints);
+            }
         }
     }
 
     updatePointsRequest.send(JSON.stringify(updatePoints));
+}
+
+var getCommentScore = (commentId, commentPoints) => {
+    var getCommentScoreRequest = new XMLHttpRequest();
+
+    getCommentScoreRequest.open('GET', commentsUrl + '/points/' + commentId, true);
+    getCommentScoreRequest.send(null);
+
+    getCommentScoreRequest.onreadystatechange = () => {
+        if (getCommentScoreRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(getCommentScoreRequest.responseText);
+            commentPoints.innerHTML = json.score;
+        }
+    }
 }
 
 var addNewComment = () => {
