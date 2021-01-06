@@ -303,13 +303,10 @@ var createCommentResponseTools = (comment, responseBtn) => {
 var updateCommentPoints = (id, value) => {
     let url = commentsUrl + '/points';
 
-    if (value > 0) {
-        url += '/inc';
-    } else {
-        url += '/dec';
+    let updatePoints = {
+        'commentId' : id,
+        'value' : value
     }
-
-    url += '/' + id;
 
     var updatePointsRequest = new XMLHttpRequest();
 
@@ -323,7 +320,7 @@ var updateCommentPoints = (id, value) => {
         }
     }
 
-    updatePointsRequest.send(null);
+    updatePointsRequest.send(JSON.stringify(updatePoints));
 }
 
 var addNewComment = () => {

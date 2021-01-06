@@ -31,13 +31,23 @@ public class CommentService {
         commentDataAccessObject.addComment(c);
     }
 
+    public void updateCommentPoints(String pointsJSON, String author) throws UpdatePointsException {
+        long commentId;
+        int value;
 
-    public void decrementCommentPoints(String userName, long id) throws UpdatePointsException {
-        commentDataAccessObject.updatePoints(userName, id, -1);
-    }
+        try {
+            JSONObject pointsJSONObject = new JSONObject(pointsJSON);
+            commentId = pointsJSONObject.getLong("commentId");
+            value = pointsJSONObject.getInt("value");
+        } catch (JSONException e) {
+            throw new UpdatePointsException("Cannot update points");
+        }
 
-    public void incrementCommentPoints(String userName, long id) throws UpdatePointsException {
-        commentDataAccessObject.updatePoints(userName, id, 1);
+        if (value != 1 && value != -1) {
+            throw new UpdatePointsException("Invalid points value");
+        }
+
+        commentDataAccessObject.updatePoints(author, commentId, value);
     }
 
     private Comment parseCommentJSON(String commentJSON, String author) {

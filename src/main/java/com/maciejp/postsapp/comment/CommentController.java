@@ -41,28 +41,13 @@ public class CommentController {
         }
     }
 
-    @PostMapping("/points/dec/{id}")
-    public String decrementCommentPoints(@PathVariable("id") long id) {
+    @PostMapping("/points")
+    public String updateCommentPoints(@RequestBody String points) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             String userName = authentication.getName();
             try {
-                commentService.decrementCommentPoints(userName, id);
-                return "{\"valid\" : true}";
-            } catch (UpdatePointsException e) {
-                return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
-            }
-        }
-        return "{\"valid\" : false, \"message\" : \"Please log in\"}";
-    }
-
-    @PostMapping("/points/inc/{id}")
-    public String incrementCommentPoints(@PathVariable("id") long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            String userName = authentication.getName();
-            try {
-                commentService.incrementCommentPoints(userName, id);
+                commentService.updateCommentPoints(points, userName);
                 return "{\"valid\" : true}";
             } catch (UpdatePointsException e) {
                 return "{\"valid\" : false, \"message\" : \"" + e.getMessage() + "\"}";
