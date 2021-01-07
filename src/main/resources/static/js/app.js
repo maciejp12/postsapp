@@ -212,6 +212,10 @@ var createCommentsList = (comments) => {
     document.getElementById('comments_container').appendChild(commentsList);
 }
 
+var appendToCommentsList = (comment, commentsList) => {
+
+}
+
 var createCommentElement = (commentJSON) => {
     let commentContainer = document.createElement('div');
     commentContainer.classList.add('comment-container');
@@ -228,7 +232,7 @@ var createCommentElement = (commentJSON) => {
 
     let commentInfo = document.createElement('p');
     commentInfo.classList.add('comment-info');
-    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
+    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate + "|pcid=" + commentJSON.parentCommentId;
 
     let commentText = document.createElement('p');
     commentText.classList.add('comment-text');

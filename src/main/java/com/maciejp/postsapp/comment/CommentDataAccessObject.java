@@ -44,9 +44,9 @@ public class CommentDataAccessObject {
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                long parentCommentId = resultSet.getLong(5);
+                Long parentCommentId = resultSet.getLong(5);
                 if (resultSet.wasNull()) {
-                    parentCommentId = -1;
+                    parentCommentId = null;
                 }
                 result.add(new Comment(resultSet.getLong(1),
                         resultSet.getString(2),
@@ -59,6 +59,7 @@ public class CommentDataAccessObject {
 
             return result;
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
             return null;
         } finally {
             close();

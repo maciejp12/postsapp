@@ -14,7 +14,7 @@ public class Comment {
 
     private int points;
 
-    private long parentCommentId;
+    private Long parentCommentId;
 
     private String text;
 
@@ -24,7 +24,7 @@ public class Comment {
                    @JsonProperty("author") String author,
                    @JsonProperty("parentId") long parentId,
                    @JsonProperty("points") int points,
-                   @JsonProperty("parentCommentId") long parentCommentId,
+                   @JsonProperty("parentCommentId") Long parentCommentId,
                    @JsonProperty("text") String text,
                    @JsonProperty("creationDate") Timestamp creationDate) {
         this.commentId = commentId;
@@ -68,11 +68,11 @@ public class Comment {
         this.points = points;
     }
 
-    public long getParentCommentId() {
+    public Long getParentCommentId() {
         return parentCommentId;
     }
 
-    public void setParentCommentId(long parentCommentId) {
+    public void setParentCommentId(Long parentCommentId) {
         this.parentCommentId = parentCommentId;
     }
 
