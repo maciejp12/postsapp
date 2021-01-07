@@ -193,27 +193,61 @@ var sortCommentsByPoints = (commentsArray) => {
     return commentsArray.sort((a, b) => a.points < b.points);
 }
 
+var filterChildComments = (commentsArray, id) => {
+    return commentsArray.filter(function (c) {
+        return c.parentCommentId == id;
+    });
+}
+
+var filterNonNullParentComments = (commentsArray) => {
+    return commentsArray.filter(function (c) {
+        return c.parentCommentId != null;
+    });
+}
+
 var createCommentsList = (comments) => {
-    var commentsList = document.createElement('div');
+    let commentsList = document.createElement('div');
     commentsList.classList.add('comments-list');
     commentsList.id = 'comments_list';
 
-    comments = sortCommentsByPoints(comments);
     console.log(comments);
 
-    for (const i in comments) {
+    /*for (const i in comments) {
         let comment = comments[i];
 
         let commentHTML = createCommentElement(comment);
 
         commentsList.appendChild(commentHTML);
+    }*/
+
+    let noParentComments = filterChildComments(comments, null);
+    noParentComments = sortCommentsByPoints(noParentComments);
+
+    let childComments = filterNonNullParentComments(comments);
+
+    for (let i = 0; i < noParentComments.length; i++) {
+        let comment = noParentComments[i];
+        appendToCommentsList(comment, filterChildComments(childComments, comment.commentId),
+                             childComments,  commentsList, 0);
     }
 
     document.getElementById('comments_container').appendChild(commentsList);
 }
 
-var appendToCommentsList = (comment, commentsList) => {
+const leftMarginCommentGap = 30;
 
+var appendToCommentsList = (comment, children, allChildComments, commentsList, depth) => {
+    let commentHTML = createCommentElement(comment);
+    commentHTML.style.marginLeft += (leftMarginCommentGap * depth) + 'px';
+    commentsList.appendChild(commentHTML);
+    
+    let sortedChildComments = sortCommentsByPoints(children);
+
+    for (let i = 0; i < sortedChildComments.length; i++) {
+        let childComment = sortedChildComments[i];
+        appendToCommentsList(childComment, filterChildComments(allChildComments, childComment.commentId), 
+                             allChildComments, commentsList, depth + 1);
+    }
 }
 
 var createCommentElement = (commentJSON) => {
@@ -232,7 +266,7 @@ var createCommentElement = (commentJSON) => {
 
     let commentInfo = document.createElement('p');
     commentInfo.classList.add('comment-info');
-    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate + "|pcid=" + commentJSON.parentCommentId;
+    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
 
     let commentText = document.createElement('p');
     commentText.classList.add('comment-text');
