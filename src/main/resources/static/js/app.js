@@ -179,7 +179,6 @@ var loadComments = (id) => {
     getCommentsByIdRequest.onreadystatechange = () => {
         if (getCommentsByIdRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(getCommentsByIdRequest.responseText);
-            console.log(json);
             createCommentsList(json);
         }
     }
@@ -190,84 +189,97 @@ var isAuth = () => {
     return authDiv != null;   
 }
 
+var sortCommentsByPoints = (commentsArray) => {
+    return commentsArray.sort((a, b) => a.points < b.points);
+}
+
 var createCommentsList = (comments) => {
     var commentsList = document.createElement('div');
     commentsList.classList.add('comments-list');
     commentsList.id = 'comments_list';
 
+    comments = sortCommentsByPoints(comments);
+    console.log(comments);
+
     for (const i in comments) {
         let comment = comments[i];
 
-        let commentContainer = document.createElement('div');
-        commentContainer.classList.add('comment-container');
+        let commentHTML = createCommentElement(comment);
 
-        let commentScore = document.createElement('div');
-        commentScore.classList.add('comment-score');
-
-        let commentPoints = document.createElement('h1');
-        commentPoints.classList.add('comment-score-points');
-        commentPoints.innerHTML = comment.points;
-
-        let commentElement = document.createElement('div');
-        commentElement.classList.add('comment-element');
-
-        let commentInfo = document.createElement('p');
-        commentInfo.classList.add('comment-info');
-        commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + comment.author + '</a></b>' + ' , ' + comment.creationDate;
-
-        let commentText = document.createElement('p');
-        commentText.classList.add('comment-text');
-        commentText.innerHTML = comment.text;
-
-        commentScore.appendChild(commentPoints);
-
-        commentElement.appendChild(commentInfo);
-        commentElement.appendChild(commentText);
-
-        if (isAuth()) {
-
-            let commentPlus = document.createElement('button');
-            commentPlus.classList.add('comment-score-btn');
-            commentPlus.innerHTML = '+';
-            commentPlus.onclick = () => {
-                updateCommentPoints(comment.commentId, 1, commentPoints)
-            }
-
-            let commentMinus = document.createElement('button');
-            commentMinus.classList.add('comment-score-btn');
-            commentMinus.innerHTML = '-';
-            commentMinus.onclick = () => {
-                updateCommentPoints(comment.commentId, -1, commentPoints)
-            }
-
-            commentPoints.remove();
-            commentScore.appendChild(commentPlus);
-            commentScore.appendChild(commentPoints);
-            commentScore.appendChild(commentMinus);
-        
-
-            let responseBtn = document.createElement('button');
-            responseBtn.classList.add('comment-response-btn');
-            responseBtn.innerHTML = 'respond';
-
-            responseBtn.onclick = () => {
-                responseBtn.style.display = 'none';
-                commentElement.appendChild(createCommentResponseTools(comment, responseBtn));        
-            }
-            commentElement.appendChild(responseBtn);
-
-        }
-        
-        commentContainer.appendChild(commentScore);
-        commentContainer.appendChild(commentElement);
-
-        commentsList.appendChild(commentContainer);
+        commentsList.appendChild(commentHTML);
     }
 
     document.getElementById('comments_container').appendChild(commentsList);
 }
 
-var createCommentResponseTools = (comment, responseBtn) => {
+var createCommentElement = (commentJSON) => {
+    let commentContainer = document.createElement('div');
+    commentContainer.classList.add('comment-container');
+
+    let commentScore = document.createElement('div');
+    commentScore.classList.add('comment-score');
+
+    let commentPoints = document.createElement('h1');
+    commentPoints.classList.add('comment-score-points');
+    commentPoints.innerHTML = commentJSON.points;
+
+    let commentElement = document.createElement('div');
+    commentElement.classList.add('comment-element');
+
+    let commentInfo = document.createElement('p');
+    commentInfo.classList.add('comment-info');
+    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
+
+    let commentText = document.createElement('p');
+    commentText.classList.add('comment-text');
+    commentText.innerHTML = commentJSON.text;
+
+    commentScore.appendChild(commentPoints);
+
+    commentElement.appendChild(commentInfo);
+    commentElement.appendChild(commentText);
+
+    if (isAuth()) {
+
+        let commentPlus = document.createElement('button');
+        commentPlus.classList.add('comment-score-btn');
+        commentPlus.innerHTML = '+';
+        commentPlus.onclick = () => {
+            updateCommentPoints(commentJSON.commentId, 1, commentPoints)
+        }
+
+        let commentMinus = document.createElement('button');
+        commentMinus.classList.add('comment-score-btn');
+        commentMinus.innerHTML = '-';
+        commentMinus.onclick = () => {
+            updateCommentPoints(commentJSON.commentId, -1, commentPoints)
+        }
+
+        commentPoints.remove();
+        commentScore.appendChild(commentPlus);
+        commentScore.appendChild(commentPoints);
+        commentScore.appendChild(commentMinus);
+    
+
+        let responseBtn = document.createElement('button');
+        responseBtn.classList.add('comment-response-btn');
+        responseBtn.innerHTML = 'respond';
+
+        responseBtn.onclick = () => {
+            responseBtn.style.display = 'none';
+            commentElement.appendChild(createCommentResponseTools(commentJSON, responseBtn));        
+        }
+        commentElement.appendChild(responseBtn);
+
+    }
+    
+    commentContainer.appendChild(commentScore);
+    commentContainer.appendChild(commentElement);
+
+    return commentContainer;
+}
+
+var createCommentResponseTools = (commentJSON, responseBtn) => {
     let responseTools = document.createElement('div');
 
     let responseTextarea = document.createElement('textarea');
@@ -278,7 +290,7 @@ var createCommentResponseTools = (comment, responseBtn) => {
     responseSubmitBtn.innerHTML = 'submit';
 
     responseSubmitBtn.onclick = () => {
-        addNewChildComment(responseTextarea.value, comment.commentId);
+        addNewChildComment(responseTextarea.value, commentJSON.commentId);
         responseBtn.style.display = 'block';
         responseTools.remove();
         // TODO refresh comments list
