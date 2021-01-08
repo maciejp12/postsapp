@@ -184,9 +184,12 @@ var loadComments = (id) => {
     }
 }
 
-var isAuth = () => {
-    let authDiv = document.getElementById('add_com_auth');
-    return authDiv != null;   
+async function isAuth() {
+    const authUrl = 'http://127.0.0.1:8080/api/user/auth';
+    const response = await fetch(authUrl, {});
+    const json = await response.json();
+
+    return json.auth;
 }
 
 var sortCommentsByPoints = (commentsArray) => {
@@ -209,16 +212,6 @@ var createCommentsList = (comments) => {
     let commentsList = document.createElement('div');
     commentsList.classList.add('comments-list');
     commentsList.id = 'comments_list';
-
-    console.log(comments);
-
-    /*for (const i in comments) {
-        let comment = comments[i];
-
-        let commentHTML = createCommentElement(comment);
-
-        commentsList.appendChild(commentHTML);
-    }*/
 
     let noParentComments = filterChildComments(comments, null);
     noParentComments = sortCommentsByPoints(noParentComments);
@@ -277,39 +270,41 @@ var createCommentElement = (commentJSON) => {
     commentElement.appendChild(commentInfo);
     commentElement.appendChild(commentText);
 
-    if (isAuth()) {
+    isAuth().then(authenthicated => {
+        if (authenthicated) {
 
-        let commentPlus = document.createElement('button');
-        commentPlus.classList.add('comment-score-btn');
-        commentPlus.innerHTML = '+';
-        commentPlus.onclick = () => {
-            updateCommentPoints(commentJSON.commentId, 1, commentPoints)
+            let commentPlus = document.createElement('button');
+            commentPlus.classList.add('comment-score-btn');
+            commentPlus.innerHTML = '+';
+            commentPlus.onclick = () => {
+                updateCommentPoints(commentJSON.commentId, 1, commentPoints)
+            }
+
+            let commentMinus = document.createElement('button');
+            commentMinus.classList.add('comment-score-btn');
+            commentMinus.innerHTML = '-';
+            commentMinus.onclick = () => {
+                updateCommentPoints(commentJSON.commentId, -1, commentPoints)
+            }
+
+            commentPoints.remove();
+            commentScore.appendChild(commentPlus);
+            commentScore.appendChild(commentPoints);
+            commentScore.appendChild(commentMinus);
+        
+
+            let responseBtn = document.createElement('button');
+            responseBtn.classList.add('comment-response-btn');
+            responseBtn.innerHTML = 'respond';
+
+            responseBtn.onclick = () => {
+                responseBtn.style.display = 'none';
+                commentElement.appendChild(createCommentResponseTools(commentJSON, responseBtn));        
+            }
+            commentElement.appendChild(responseBtn);
+
         }
-
-        let commentMinus = document.createElement('button');
-        commentMinus.classList.add('comment-score-btn');
-        commentMinus.innerHTML = '-';
-        commentMinus.onclick = () => {
-            updateCommentPoints(commentJSON.commentId, -1, commentPoints)
-        }
-
-        commentPoints.remove();
-        commentScore.appendChild(commentPlus);
-        commentScore.appendChild(commentPoints);
-        commentScore.appendChild(commentMinus);
-    
-
-        let responseBtn = document.createElement('button');
-        responseBtn.classList.add('comment-response-btn');
-        responseBtn.innerHTML = 'respond';
-
-        responseBtn.onclick = () => {
-            responseBtn.style.display = 'none';
-            commentElement.appendChild(createCommentResponseTools(commentJSON, responseBtn));        
-        }
-        commentElement.appendChild(responseBtn);
-
-    }
+    });
     
     commentContainer.appendChild(commentScore);
     commentContainer.appendChild(commentElement);
@@ -366,7 +361,6 @@ var updateCommentPoints = (id, value, commentPoints) => {
     updatePointsRequest.onreadystatechange = () => {
         if (updatePointsRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(updatePointsRequest.responseText);
-            console.log(json);
             if (json.valid) {
                 getCommentScore(id, commentPoints);
             }
@@ -420,7 +414,6 @@ var addNewComment = () => {
             document.getElementById('comment_content').value = '';
             document.getElementById('comments_list').remove();
             loadComments(curPostId);
-            console.log(json);
         }
     }
 

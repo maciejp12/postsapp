@@ -33,6 +33,10 @@ public class UserDataAccessObject {
 
             ResultSet resultSet = statement.executeQuery();
 
+            if (!resultSet.isBeforeFirst()) {
+                return result;
+            }
+
             while (resultSet.next()) {
                 result = new User(resultSet.getLong(1),
                         resultSet.getString(2),
