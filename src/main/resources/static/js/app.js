@@ -446,6 +446,10 @@ var addNewChildComment = (text, parentCommentId) => {
 
     childCommentRequest.open('POST', commentsUrl, true);
     
+    if (text == '') {
+        return;
+    }
+    
     let commentJSON = {
         'parentId' : curPostId,
         'parentCommentId' : parentCommentId,

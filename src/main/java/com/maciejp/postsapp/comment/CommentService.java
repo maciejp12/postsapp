@@ -28,6 +28,9 @@ public class CommentService {
     }
 
     public void addComment(Comment c) throws CommentCreationException {
+        if (c.getText() == "") {
+            throw new CommentCreationException("Comment text cannot be empty");
+        }
         commentDataAccessObject.addComment(c);
     }
 
@@ -55,7 +58,7 @@ public class CommentService {
     }
 
     private Comment parseCommentJSON(String commentJSON, String author) {
-        long parentCommentId;
+        Long parentCommentId;
         long parentId;
         String text;
 
@@ -72,7 +75,7 @@ public class CommentService {
             JSONObject commentJSONObject = new JSONObject(commentJSON);
             parentCommentId = commentJSONObject.getLong("parentCommentId");
         } catch (JSONException e) {
-            parentCommentId = -1;
+            parentCommentId = null;
         }
 
         return new Comment(0, author, parentId, 0, parentCommentId, text, null);

@@ -23,6 +23,49 @@ public class CommentDataAccessObject {
     public CommentDataAccessObject() {
     }
 
+    public Comment selectCommentById(long id) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            Comment result = null;
+
+            String sql = "SELECT comment_id, u.name, parent, p.score, parent_comment, comment_text, creation_date " +
+                    "FROM (comments JOIN users AS u ON comments.author = u.user_id) " +
+                    "LEFT JOIN (SELECT comment , SUM(value) AS score FROM points GROUP BY comment) AS p " +
+                    "ON p.comment = comment_id WHERE comment_id = ? " +
+                    "ORDER BY score DESC, creation_date DESC";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+
+            statement.setLong(1, id);
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+
+            while (resultSet.next()) {
+                Long parentCommentId = resultSet.getLong(5);
+                if (resultSet.wasNull()) {
+                    parentCommentId = null;
+                }
+                result = new Comment(resultSet.getLong(1), resultSet.getString(2),
+                        resultSet.getLong(3), resultSet.getInt(4), parentCommentId,
+                        resultSet.getString(6), resultSet.getTimestamp(7));
+            }
+
+            return result;
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            close();
+        }
+    }
+
     public List<Comment> selectAllCommentsOfPost(long id) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -90,17 +133,35 @@ public class CommentDataAccessObject {
                 authorId = resultSet.getLong(1);
             }
 
+            String parentSql = "SELECT * FROM posts WHERE post_id = ? ";
+            statement = connection.prepareStatement(parentSql);
+            statement.setLong(1, comment.getParentId());
+            resultSet = statement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                throw new CommentCreationException("Invalid parent post");
+            }
+
+            if (comment.getParentCommentId() != null) {
+                String commentParentsql = "SELECT * FROM comments WHERE comment_id = ? ";
+                statement = connection.prepareStatement(commentParentsql);
+                statement.setLong(1, comment.getParentCommentId());
+                resultSet = statement.executeQuery();
+                if (!resultSet.isBeforeFirst()) {
+                    throw new CommentCreationException("Invalid parent comment");
+                }
+            }
+
             String sql = "INSERT INTO comments(author, parent, parent_comment, comment_text, creation_date) " +
                     "VALUES( ? , ? , ? , ? , now())";
 
 
-            long parentCommentId = comment.getParentCommentId();
+            Long parentCommentId = comment.getParentCommentId();
 
             statement = connection.prepareStatement(sql);
 
             statement.setLong(1, authorId);
             statement.setLong(2, comment.getParentId());
-            if (parentCommentId != -1) {
+            if (parentCommentId != null) {
                 statement.setLong(3, comment.getParentCommentId());
             } else {
                 statement.setNull(3, Types.INTEGER);
@@ -139,7 +200,7 @@ public class CommentDataAccessObject {
             while (resultSet.next()) {
                 authorId = resultSet.getLong(1);
             }
-            
+
             String sql = "SELECT * FROM points WHERE author = ? AND comment = ? ";
 
             statement = connection.prepareStatement(sql);
