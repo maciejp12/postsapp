@@ -103,7 +103,6 @@ const addReturnButton = () => {
     var returnBtn = document.createElement('button');
     returnBtn.innerHTML = 'return';
     returnBtn.onclick = () => {
-        //TODO clean first
         document.getElementById('cur_post').remove();
         document.getElementById('comments_list').remove();
         document.getElementById('comments_container').style.display = 'none';
@@ -135,7 +134,7 @@ var curPostId = null;
 var showPost = (id) => {
     disposePostsList();
     addReturnButton();
-    curPostId = id;
+    curPostId = id; 
     getPostById(id);
 }
 
@@ -259,7 +258,7 @@ var createCommentElement = (commentJSON) => {
 
     let commentInfo = document.createElement('p');
     commentInfo.classList.add('comment-info');
-    commentInfo.innerHTML = '<b><a class="undecorated" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
+    commentInfo.innerHTML = '<b><a class="comment-author" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
 
     let commentText = document.createElement('p');
     commentText.classList.add('comment-text');
@@ -326,7 +325,6 @@ var createCommentResponseTools = (commentJSON, responseBtn) => {
         addNewChildComment(responseTextarea.value, commentJSON.commentId);
         responseBtn.style.display = 'block';
         responseTools.remove();
-        // TODO refresh comments list
     }
 
     let cancelBtn = document.createElement('button');
@@ -385,7 +383,7 @@ var getCommentScore = (commentId, commentPoints) => {
 }
 
 var addNewComment = () => {
-    var cxhr = new XMLHttpRequest();
+    var addCommentRequest = new XMLHttpRequest();
 
     let comText = document.getElementById('comment_content').value;
     let errorMessage = document.getElementById('add_com_message');
@@ -398,7 +396,7 @@ var addNewComment = () => {
 
     errorMessage.innerHTML = '';
 
-    cxhr.open('POST', commentsUrl, true);
+    addCommentRequest.open('POST', commentsUrl, true);
     
     let commentJSON = {
         'parentId' : curPostId,
@@ -406,18 +404,19 @@ var addNewComment = () => {
         'text' : comText
     }
 
-    cxhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    addCommentRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-    cxhr.onreadystatechange = () => {
-        if (cxhr.readyState == XMLHttpRequest.DONE) {
-            var json = JSON.parse(cxhr.responseText);
+    addCommentRequest.onreadystatechange = () => {
+        if (addCommentRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(addCommentRequest.responseText);
             document.getElementById('comment_content').value = '';
             document.getElementById('comments_list').remove();
+            // TODO add only new comment to list
             loadComments(curPostId);
         }
     }
 
-    cxhr.send(JSON.stringify(commentJSON));
+    addCommentRequest.send(JSON.stringify(commentJSON));
 }
 
 
@@ -438,6 +437,7 @@ var addNewChildComment = (text, parentCommentId) => {
         if (childCommentRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(childCommentRequest.responseText);
             console.log(json);
+            // TODO add only child comment to list
         }
     }
 

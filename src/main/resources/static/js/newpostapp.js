@@ -43,19 +43,19 @@ var validateInput = (input) => {
 }
 
 var submitform = () => {
-    var postrequest = new XMLHttpRequest();
+    var addPostRequest = new XMLHttpRequest();
     var json = getInput();
 
     if (!validateInput(json)) {
         return;
     }
 
-    postrequest.open('POST', url, true);
-    postrequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    addPostRequest.open('POST', url, true);
+    addPostRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     
-    postrequest.onreadystatechange = () => {
-        if (postrequest.readyState == XMLHttpRequest.DONE) {
-            var json = JSON.parse(postrequest.responseText);
+    addPostRequest.onreadystatechange = () => {
+        if (addPostRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(addPostRequest.responseText);
             if (json.valid) {
                 window.location.href = '/';
             } else {
@@ -65,5 +65,5 @@ var submitform = () => {
         }
     }
 
-    postrequest.send(JSON.stringify(json));
+    addPostRequest.send(JSON.stringify(json));
 }

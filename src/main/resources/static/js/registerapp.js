@@ -3,7 +3,6 @@ const passwdNotMatchMessage = 'password doesn\'t match';
 const passwdMatchMessage = 'matching';
 
 var getRegisterInput = () => {
-    //TODO validate data
 
     let email = document.getElementById('email').value;
     let name = document.getElementById('name').value;
@@ -79,7 +78,7 @@ var validateEmail = (email) => {
 
 
 var submitRegisterForm = () => {
-    var xhr = new XMLHttpRequest();
+    var registerRequest = new XMLHttpRequest();
     var json = getRegisterInput();
 
     if (json.password != json.password_confirm) {
@@ -93,11 +92,11 @@ var submitRegisterForm = () => {
         return;
     }
 
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState == XMLHttpRequest.DONE) {
-            var json = JSON.parse(xhr.responseText);
+    registerRequest.open('POST', url, true);
+    registerRequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    registerRequest.onreadystatechange = () => {
+        if (registerRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(registerRequest.responseText);
             if (json.valid) {
                 window.location.href = '/register_success';
             } else {
@@ -107,7 +106,5 @@ var submitRegisterForm = () => {
         }
     }
 
-    
-
-    xhr.send(JSON.stringify(json));
+    registerRequest.send(JSON.stringify(json));
 }

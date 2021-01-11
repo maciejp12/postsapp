@@ -139,9 +139,7 @@ public class CommentDataAccessObject {
             while (resultSet.next()) {
                 authorId = resultSet.getLong(1);
             }
-
-            // TODO select first
-
+            
             String sql = "SELECT * FROM points WHERE author = ? AND comment = ? ";
 
             statement = connection.prepareStatement(sql);
