@@ -1,16 +1,32 @@
 const postsUrl = 'http://127.0.0.1:8080/api/posts';
 const commentsUrl = 'http://127.0.0.1:8080/api/comments';
 
-const sendGetRequest = () => {
-    getRequest.open('GET', postsUrl, true);
-    getRequest.send(null);
+var scrollPostion = [0, 0];
+var postListScrollPosition = [0, 0];
+
+var updateScrollPostion = () => {
+    if (window.pageYOffset != undefined) {
+        scrollPostion = [pageXOffset, pageYOffset];
+    } else {
+        var sx, sy, d = document,
+            r = d.documentElement,
+            b = d.body;
+        sx = r.scrollLeft || b.scrollLeft || 0;
+        sy = r.scrollTop || b.scrollTop || 0;
+        scrollPostion = [sx, sy];
+    }
 }
 
-const getRequest = new XMLHttpRequest();
-
-getRequest.onreadystatechange = () => {        
-    if (getRequest.readyState == XMLHttpRequest.DONE) {
-        console.log(getRequest.responseText);
+var updatePostListScrollPostion = () => {
+    if (window.pageYOffset != undefined) {
+        postListScrollPosition = [pageXOffset, pageYOffset];
+    } else {
+        var sx, sy, d = document,
+            r = d.documentElement,
+            b = d.body;
+        sx = r.scrollLeft || b.scrollLeft || 0;
+        sy = r.scrollTop || b.scrollTop || 0;
+        postListScrollPosition = [sx, sy];
     }
 }
 
@@ -23,7 +39,8 @@ const getAllPosts = () => {
     getAllRequest.onreadystatechange = () => {
         if (getAllRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(getAllRequest.responseText);
-            createPostsList(json)        
+            createPostsList(json);
+            window.scroll(postListScrollPosition[0], postListScrollPosition[1]);    
         }
     }
 }
@@ -78,6 +95,7 @@ const createNewPost = (postJSON) => {
     }
 
     title.onclick = () => {
+        updatePostListScrollPostion();
         showPost(postJSON.postId)
     }
 
@@ -139,7 +157,6 @@ var showPost = (id) => {
 }
 
 var loadPost = (postJSON) => {
-    console.log(postJSON);
 
     let container = document.getElementById('posts_container');
     let postElement = document.createElement('div');
@@ -179,6 +196,7 @@ var loadComments = (id) => {
         if (getCommentsByIdRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(getCommentsByIdRequest.responseText);
             createCommentsList(json);
+            window.scroll(scrollPostion[0], scrollPostion[1])
         }
     }
 }
@@ -243,6 +261,7 @@ var appendToCommentsList = (comment, children, allChildComments, commentsList, d
 }
 
 var createCommentElement = (commentJSON) => {
+
     let commentContainer = document.createElement('div');
     commentContainer.classList.add('comment-container');
 
@@ -409,10 +428,12 @@ var addNewComment = () => {
     addCommentRequest.onreadystatechange = () => {
         if (addCommentRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(addCommentRequest.responseText);
-            document.getElementById('comment_content').value = '';
-            document.getElementById('comments_list').remove();
-            // TODO add only new comment to list
-            loadComments(curPostId);
+            if (json.valid) {
+                updateScrollPostion();
+                document.getElementById('comment_content').value = '';
+                document.getElementById('comments_list').remove();
+                loadComments(curPostId);
+            }
         }
     }
 
@@ -436,8 +457,13 @@ var addNewChildComment = (text, parentCommentId) => {
     childCommentRequest.onreadystatechange = () => {
         if (childCommentRequest.readyState == XMLHttpRequest.DONE) {
             var json = JSON.parse(childCommentRequest.responseText);
-            console.log(json);
-            // TODO add only child comment to list
+            
+            if (json.valid) {
+                updateScrollPostion();
+                document.getElementById('comment_content').value = '';
+                document.getElementById('comments_list').remove();
+                loadComments(curPostId);
+            }
         }
     }
 
