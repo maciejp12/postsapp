@@ -1,5 +1,6 @@
 const postsUrl = 'http://127.0.0.1:8080/api/posts';
 const commentsUrl = 'http://127.0.0.1:8080/api/comments';
+const authUrl = 'http://127.0.0.1:8080/api/user/auth';
 
 var scrollPostion = [0, 0];
 var postListScrollPosition = [0, 0];
@@ -154,8 +155,16 @@ var showPost = (id) => {
     disposePostsList();
     addReturnButton();
     scrollPostion = [0, 0];
-    curPostId = id; 
+    curPostId = id;
     getPostById(id);
+    
+    fetch(postsUrl + '/visit/' + id, {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'PATCH', 
+    })
 }
 
 var loadPost = (postJSON) => {
@@ -169,18 +178,22 @@ var loadPost = (postJSON) => {
 
     let title = document.createElement('p');
     let info = document.createElement('p');
+    let visits = document.createElement('p');
     let content = document.createElement('p');
 
     title.classList.add('post-element-title');
     info.classList.add('post-element-info');
+    visits.classList.add('post-element-info');
     content.classList.add('post-element-content');
 
     title.innerHTML = postJSON.title;
     info.innerHTML = 'Created by <a href="#" class="post-element-author">' + postJSON.author + '</a> on ' + postJSON.creationDate;
+    visits.innerHTML = (postJSON.visits + 1) + ' visits';
     content.innerHTML = postJSON.content;
 
     postElement.appendChild(title);
     postElement.appendChild(info);
+    postElement.append(visits);
     postElement.appendChild(content);
 
     container.appendChild(postElement);   
@@ -222,7 +235,6 @@ var reloadComments = (id) => {
 }
 
 async function isAuth() {
-    const authUrl = 'http://127.0.0.1:8080/api/user/auth';
     const response = await fetch(authUrl, {});
     const json = await response.json();
 

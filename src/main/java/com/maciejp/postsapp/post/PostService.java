@@ -30,6 +30,10 @@ public class PostService {
         return postDataAccessObject.selectPostById(id);
     }
 
+    public void addVisit(long id) {
+        postDataAccessObject.addVisitById(id);
+    }
+
     public Post getPostByTitle(String title) {
         return postDataAccessObject.selectPostByTitle(title);
     }
@@ -60,7 +64,7 @@ public class PostService {
             Post post = new Post(0, postJSONObject.getString("title"),
                                     author,
                                     postJSONObject.getString("content"),
-                                    null);
+                                    null, 0);
             return post;
         } catch (JSONException e) {
             return null;

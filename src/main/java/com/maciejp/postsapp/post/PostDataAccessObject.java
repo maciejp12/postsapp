@@ -28,7 +28,7 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             List<Post> result = new ArrayList<>();
 
-            String sql = "SELECT post_id, title, users.name, content, creation_date FROM posts " +
+            String sql = "SELECT post_id, title, users.name, content, creation_date, visits FROM posts " +
                     "JOIN users ON posts.author = users.user_id ORDER BY " +
                     "creation_date DESC";
 
@@ -43,7 +43,8 @@ public class PostDataAccessObject {
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getTimestamp(5)));
+                        resultSet.getTimestamp(5),
+                        resultSet.getInt(6)));
             }
 
             return result;
@@ -60,7 +61,7 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             List<Post> result = new ArrayList<>();
 
-            String sql = "SELECT post_id, title, users.name, SUBSTR(content, 1, ? ) AS content_head, creation_date " +
+            String sql = "SELECT post_id, title, users.name, SUBSTR(content, 1, ? ) AS content_head, creation_date, visits " +
                     "FROM posts " + "JOIN users ON posts.author = users.user_id " +
                     "ORDER BY " + "creation_date DESC";
 
@@ -77,7 +78,8 @@ public class PostDataAccessObject {
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getTimestamp(5)));
+                        resultSet.getTimestamp(5),
+                        resultSet.getInt(6)));
             }
 
             return result;
@@ -93,7 +95,7 @@ public class PostDataAccessObject {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Post result = null;
 
-            String sql = "SELECT post_id, title, name, content, creation_date FROM posts " +
+            String sql = "SELECT post_id, title, name, content, creation_date, visits FROM posts " +
                     "JOIN users ON posts.author = users.user_id WHERE post_id = ? ";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
@@ -109,7 +111,8 @@ public class PostDataAccessObject {
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getTimestamp(5));
+                        resultSet.getTimestamp(5),
+                        resultSet.getInt(6));
             }
 
             return result;
@@ -120,12 +123,32 @@ public class PostDataAccessObject {
         }
     }
 
+    public void addVisitById(long id) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String sql = "UPDATE posts SET visits = visits + 1 WHERE post_id = ? ";
+
+            connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
+                    dbUserName, dbUserPassword);
+            statement = connection.prepareStatement(sql);
+            statement.setLong(1, id);
+
+            statement.executeUpdate();
+
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
+        }
+    }
+
     public Post selectPostByTitle(String title) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Post result = null;
 
-            String sql = "SELECT post_id, title, name, content, creation_date FROM posts " +
+            String sql = "SELECT post_id, title, name, content, creation_date, visits FROM posts " +
                     "JOIN users ON posts.author = users.user_id WHERE title = ? ";
 
             connection = DriverManager.getConnection(host + dbName + "?useSSL=false&allowPublicKeyRetrieval=true",
@@ -140,7 +163,8 @@ public class PostDataAccessObject {
                         resultSet.getString(2),
                         resultSet.getString(3),
                         resultSet.getString(4),
-                        resultSet.getTimestamp(5));
+                        resultSet.getTimestamp(5),
+                        resultSet.getInt(6));
             }
 
             return result;
@@ -175,8 +199,8 @@ public class PostDataAccessObject {
                 authorId = resultSet.getLong(1);
             }
 
-            String sql = "INSERT INTO posts(title, author, content, creation_date) " +
-                    "VALUES( ? ,  ? ,  ? , now())";
+            String sql = "INSERT INTO posts(title, author, content, creation_date, visits) " +
+                    "VALUES( ? ,  ? ,  ? , now(), ? )";
 
 
             statement = connection.prepareStatement(sql);
@@ -184,6 +208,7 @@ public class PostDataAccessObject {
             statement.setString(1, post.getTitle());
             statement.setLong(2, authorId);
             statement.setString(3, post.getContent());
+            statement.setInt(4, post.getVisits());
 
             statement.executeUpdate();
 

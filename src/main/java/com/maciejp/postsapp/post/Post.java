@@ -17,6 +17,8 @@ public class Post {
 
     private Timestamp creationDate;
 
+    private int visits;
+
     public Post() {
 
     }
@@ -25,12 +27,14 @@ public class Post {
                 @JsonProperty("title") String title,
                 @JsonProperty("author") String author,
                 @JsonProperty("content") String content,
-                @JsonProperty("creationDate") Timestamp creationDate) {
+                @JsonProperty("creationDate") Timestamp creationDate,
+                @JsonProperty("visits") int visits) {
         this.postId = postId;
         this.title = title;
         this.author = author;
         this.content = content;
         this.creationDate = creationDate;
+        this.visits = visits;
     }
 
     public long getPostId() {
@@ -53,6 +57,10 @@ public class Post {
         return creationDate;
     }
 
+    public int getVisits() {
+        return visits;
+    }
+
     public void setPostId(long postId) {
         this.postId = postId;
     }
@@ -73,6 +81,10 @@ public class Post {
         this.creationDate = creationDate;
     }
 
+    public void setVisits(int visits) {
+        this.visits = visits;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -81,6 +93,7 @@ public class Post {
                 ", author='" + author + '\'' +
                 ", content='" + content + '\'' +
                 ", creationDate=" + creationDate +
+                ", visits=" + visits +
                 '}';
     }
 }

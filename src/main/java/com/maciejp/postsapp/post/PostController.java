@@ -29,6 +29,12 @@ public class PostController {
         return postService.getPostById(id);
     }
 
+    @PatchMapping("/visit/{id}")
+    public void addVisit(@PathVariable("id") long id) {
+        postService.addVisit(id);
+    }
+
+
     @GetMapping("/head")
     public List<Post> getAllPostHeads() {
         return postService.getAllPostsHeads();
