@@ -126,6 +126,7 @@ const addReturnButton = () => {
         document.getElementById('comments_container').style.display = 'none';
         returnBtn.remove();
         curPostId = null;
+        scrollPostion = [0, 0];
         getAllPosts();
     }
 
@@ -152,6 +153,7 @@ var curPostId = null;
 var showPost = (id) => {
     disposePostsList();
     addReturnButton();
+    scrollPostion = [0, 0];
     curPostId = id; 
     getPostById(id);
 }
@@ -197,6 +199,24 @@ var loadComments = (id) => {
             var json = JSON.parse(getCommentsByIdRequest.responseText);
             createCommentsList(json);
             window.scroll(scrollPostion[0], scrollPostion[1])
+        }
+    }
+}
+
+var reloadComments = (id) => {
+    document.getElementById('comments_container').style.display = 'block';
+
+    var getCommentsByIdRequest = new XMLHttpRequest();
+
+    getCommentsByIdRequest.open('GET', commentsUrl + '/parent/' + id, true);
+    getCommentsByIdRequest.send(null);
+
+    getCommentsByIdRequest.onreadystatechange = () => {
+        if (getCommentsByIdRequest.readyState == XMLHttpRequest.DONE) {
+            var json = JSON.parse(getCommentsByIdRequest.responseText);
+            createCommentsList(json);
+            let commentsContainer = document.getElementById('comments_container');
+            commentsContainer.style.height = '';
         }
     }
 }
@@ -277,7 +297,22 @@ var createCommentElement = (commentJSON) => {
 
     let commentInfo = document.createElement('p');
     commentInfo.classList.add('comment-info');
-    commentInfo.innerHTML = '<b><a class="comment-author" href="#">' + commentJSON.author + '</a></b>' + ' , ' + commentJSON.creationDate;
+
+    let commentAuthor = document.createElement('a');
+    commentAuthor.classList.add('comment-author');
+    commentAuthor.href = '#';
+    commentAuthor.innerHTML = commentJSON.author;
+
+    commentAuthor.onmouseover = () => {
+        commentAuthor.style.color = '#000000';
+    }
+
+    commentAuthor.onmouseout = () => {
+        commentAuthor.style.color = '#444444';
+    }
+
+    commentInfo.appendChild(commentAuthor);
+    commentInfo.innerHTML += ' ' + commentJSON.creationDate;
 
     let commentText = document.createElement('p');
     commentText.classList.add('comment-text');
@@ -464,9 +499,11 @@ var addNewChildComment = (text, parentCommentId) => {
             
             if (json.valid) {
                 updateScrollPostion();
+                let commentsContainer = document.getElementById('comments_container');
+                commentsContainer.style.height = (commentsContainer.offsetHeight) + 'px';
                 document.getElementById('comment_content').value = '';
                 document.getElementById('comments_list').remove();
-                loadComments(curPostId);
+                reloadComments(curPostId);
             }
         }
     }
