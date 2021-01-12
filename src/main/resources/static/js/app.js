@@ -145,6 +145,15 @@ const getPostById = (id) => {
             var json = JSON.parse(getByIdRequest.responseText);
             loadPost(json);
             loadComments(id);
+
+            fetch(postsUrl + '/visit/' + id, {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: 'PATCH', 
+            })
+
         }
     }
 }
@@ -157,14 +166,6 @@ var showPost = (id) => {
     scrollPostion = [0, 0];
     curPostId = id;
     getPostById(id);
-
-    fetch(postsUrl + '/visit/' + id, {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        method: 'PATCH', 
-    })
 }
 
 var loadPost = (postJSON) => {
