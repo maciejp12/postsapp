@@ -43,11 +43,18 @@
 
     <div id="comments_container" class="comments-container" style="display: none;">
         <div sec:authorize="!isFullyAuthenticated()" id="add_com_notauth">
+            <div>
+                <p id="comment_counter" class="comment-counter">Comments</p>
+            </div>
             <p>Please log in to comment</p>
         </div>
 
         <div sec:authorize="isFullyAuthenticated()" id="add_com_auth">
             <div id="add_com_container" class="add-comment-container">
+                <div>
+                    <p id="comment_counter" class="comment-counter">Comments</p>
+                </div>
+
                 <div>
                     <p>add new comment as <b id="add_com_user">[[${#request.userPrincipal.principal.name}]]</b></p>
                 </div>

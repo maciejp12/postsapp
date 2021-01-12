@@ -157,7 +157,7 @@ var showPost = (id) => {
     scrollPostion = [0, 0];
     curPostId = id;
     getPostById(id);
-    
+
     fetch(postsUrl + '/visit/' + id, {
         headers: {
             'Accept': 'application/json',
@@ -258,6 +258,9 @@ var filterNonNullParentComments = (commentsArray) => {
 }
 
 var createCommentsList = (comments) => {
+    let commentCounter = document.getElementById('comment_counter');
+    commentCounter.innerHTML = 'Comments(' + comments.length + ')';
+
     let commentsList = document.createElement('div');
     commentsList.classList.add('comments-list');
     commentsList.id = 'comments_list';
